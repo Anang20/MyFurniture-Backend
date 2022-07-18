@@ -11,6 +11,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   email: string;
 
+  @IsNotEmpty()
   no_telp: string;
 
   @IsNotEmpty()
