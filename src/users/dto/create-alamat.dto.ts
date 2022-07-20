@@ -23,6 +23,7 @@ export class CreateAlamatDto {
 
     @IsNotEmpty()
     alamat: string
+    
     @IsNotEmpty()
     latitude: string
 
