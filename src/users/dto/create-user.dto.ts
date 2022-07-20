@@ -3,9 +3,6 @@ import { Role } from '../entities/role.entity';
 
 export class CreateUserDto {
   @IsNotEmpty()
-  id_user: string;
-
-  @IsNotEmpty()
   nama_lengkap: string;
 
   @IsNotEmpty()

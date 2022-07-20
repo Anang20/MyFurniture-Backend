@@ -13,6 +13,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateAlamatDto } from './dto/create-alamat.dto';
 
 @Controller('users')
 export class UsersController {
@@ -30,6 +31,17 @@ export class UsersController {
   @Get()
   async findAll() {
     const [data, count] = await this.usersService.findAll();
+
+    return {
+      data,
+      count,
+      statusCode: HttpStatus.OK,
+      message: 'success',
+    };
+  }
+  @Get('cari_alamat')
+  async findAllAlamat() {
+    const [data, count] = await this.usersService.findAllAlamat();
 
     return {
       data,
@@ -69,4 +81,21 @@ export class UsersController {
       message: 'success',
     };
   }
+  @Post('create_alamat')
+  async createAlamat(@Body() createAlamatDto: CreateAlamatDto) {
+    return {
+      data: await this.usersService.createAlamat(createAlamatDto),
+      statusCode: HttpStatus.CREATED,
+      message: 'success',
+    };
+  }
+  @Get(':id_alamat_user')
+  async findAlamat(@Param('id_alamat_user', ParseUUIDPipe) id_alamat_user: string) {
+    return {
+      data: await this.usersService.findAlamat(id_alamat_user),
+      statusCode: HttpStatus.OK,
+      message: 'success',
+    };
+  }
 }
+
