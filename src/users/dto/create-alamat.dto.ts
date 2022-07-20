@@ -5,6 +5,7 @@ import { Kota } from "../entities/kota.entity";
 import { Provinsi } from "../entities/provinsi.entity";
 
 export class CreateAlamatDto {
+
     @IsNotEmpty()
     nama_provinsi: string;
 
@@ -22,7 +23,6 @@ export class CreateAlamatDto {
 
     @IsNotEmpty()
     alamat: string
-
     @IsNotEmpty()
     latitude: string
 
