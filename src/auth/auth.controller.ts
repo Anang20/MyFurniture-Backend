@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
@@ -29,5 +29,12 @@ export class AuthController {
             message: 'Success',
             accessToken: res
         }
+    }
+
+    @Get()
+    @UseGuards(AuthGuard())
+    async testAuth(@Req() req) {
+        console.log(req.user)
+
     }
 }
