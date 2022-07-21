@@ -20,7 +20,7 @@ export class User {
 
   @ManyToOne(
     () => {
-      return Role;
+      return Role;               
     },
     (callBack) => {
       return callBack.id_role
