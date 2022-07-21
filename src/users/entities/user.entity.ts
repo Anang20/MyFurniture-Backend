@@ -23,7 +23,7 @@ export class User {
       return callBack.id_role
     }
   )
-  role: Role;
+  role: number;
   
 
   @Column()
@@ -35,11 +35,14 @@ export class User {
   @Column()
   password: string;
   
-  @Column({unique: true})
-  no_telp: string;
+  @Column({unique: true,type:'varchar'})
+  no_telp: number;
 
   @Column({ nullable: true})
   foto: string;
+
+  @Column()
+  salt: string
 
   @CreateDateColumn()
   created_at: Date;

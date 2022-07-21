@@ -1,19 +1,19 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty, Matches } from 'class-validator';
 import { Role } from '../entities/role.entity';
 
 export class CreateUserDto {
   @IsNotEmpty()
-  id_user: string;
-
-  @IsNotEmpty()
   nama_lengkap: string;
+ 
+  @IsNotEmpty()
+  @IsEmail()
+  email:  string;
 
   @IsNotEmpty()
-  email: string;
-
-  no_telp: string;
+  no_telp: number;
 
   @IsNotEmpty()
+  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^*-]).{8,}/)
   password: string;
 
   foto: string;

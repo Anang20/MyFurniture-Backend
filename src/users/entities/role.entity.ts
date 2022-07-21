@@ -1,10 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, OneToMany, } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, OneToMany, PrimaryColumn, } from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
 export class Role {
-    @PrimaryGeneratedColumn('uuid')
-    id_role: string;
+    @PrimaryColumn()
+    id_role: number;
 
     @Column()
     role_name: string;

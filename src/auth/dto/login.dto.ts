@@ -1,21 +1,9 @@
 import { IsEmail, IsNotEmpty, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
-export class RegisterDto {
-    
-    @IsNotEmpty()
-    @IsString()
-    @MinLength(6)
-    @MaxLength(30)
-    nama_lengkap: string;
-
+export class LoginDto {
     @IsNotEmpty()
     @IsEmail()
     email: string;
-
-    @IsNotEmpty()     
-    @MinLength(11)
-    @MaxLength(13)
-    no_telp: number;
 
     @IsNotEmpty()
     @IsString()
