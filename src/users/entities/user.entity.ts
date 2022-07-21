@@ -7,7 +7,10 @@ import {
   VersionColumn,
   CreateDateColumn,
   ManyToOne,
+  OneToMany,
+  JoinTable,
 } from 'typeorm';
+import { Alamat } from './alamat.entity';
 import { Role } from './role.entity';
 
 @Entity()
@@ -25,7 +28,6 @@ export class User {
   )
   role: number;
   
-
   @Column()
   nama_lengkap: string;
 
@@ -52,4 +54,7 @@ export class User {
 
   @DeleteDateColumn()
   deleted_at: Date;
+
+  // @OneToMany(() => Alamat, (alamat) => alamat.user)
+  // alamat: Alamat[]
 }

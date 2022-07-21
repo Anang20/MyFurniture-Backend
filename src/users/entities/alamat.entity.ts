@@ -9,16 +9,6 @@ export class Alamat {
 
     @ManyToOne(
         () => {
-            return User;
-        },
-        (callBack) => {
-            return callBack.id_user
-        }
-    )
-    user: User;
-
-    @ManyToOne(
-        () => {
             return Kelurahan;
         },
         (callBack) => {
@@ -35,6 +25,9 @@ export class Alamat {
 
     @Column()
     longtitude: string
+
+    @ManyToOne(() =>  User)
+    user: User
 
     @CreateDateColumn()
     created_at: Date;

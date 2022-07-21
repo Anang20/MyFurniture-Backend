@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, Matches } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, Matches } from 'class-validator';
 import { Role } from '../entities/role.entity';
 
 export class CreateUserDto {
@@ -16,6 +16,7 @@ export class CreateUserDto {
   @Matches(/^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^*-]).{8,}/)   
   password: string;    
   
-  foto: string;  
+  @IsOptional()
+  foto: string;
 
 }

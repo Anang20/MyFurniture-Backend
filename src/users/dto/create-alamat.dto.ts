@@ -3,20 +3,12 @@ import { Kecamatan } from "../entities/kecamatan.entity";
 import { Kelurahan } from "../entities/kelurahan.entity";
 import { Kota } from "../entities/kota.entity";
 import { Provinsi } from "../entities/provinsi.entity";
+import { User } from "../entities/user.entity";
 
 export class CreateAlamatDto {
 
     @IsNotEmpty()
-    nama_provinsi: string;
-
-    @IsNotEmpty()
-    nama_kota: string
-
-    @IsNotEmpty()
-    nama_kecamatan: string
-
-    @IsNotEmpty()
-    nama_kelurahan: string
+    id_kelurahan: number
 
     @IsNotEmpty()
     id_user: string
@@ -29,4 +21,5 @@ export class CreateAlamatDto {
 
     @IsNotEmpty()
     longtitude: string
+
 }

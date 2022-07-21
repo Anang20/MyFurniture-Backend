@@ -14,6 +14,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateAlamatDto } from './dto/create-alamat.dto';
+import { Alamat } from './entities/alamat.entity';
 
 @Controller('users')
 export class UsersController {
@@ -81,7 +82,7 @@ export class UsersController {
       message: 'success',
     };
   }
-  @Post('create_alamat')
+  @Post('create_alamat/:id_user')
   async createAlamat(@Body() createAlamatDto: CreateAlamatDto) {
     return {
       data: await this.usersService.createAlamat(createAlamatDto),
@@ -89,10 +90,10 @@ export class UsersController {
       message: 'success',
     };
   }
-  @Get(':id_alamat_user')
-  async findAlamat(@Param('id_alamat_user', ParseUUIDPipe) id_alamat_user: string) {
+  @Get('carialamat/:id_user')
+  async findAlamat(@Param('id_user', ParseUUIDPipe) id_user: string) {
     return {
-      data: await this.usersService.findAlamat(id_alamat_user),
+      data: await this.usersService.findAlamat(id_user),
       statusCode: HttpStatus.OK,
       message: 'success',
     };
