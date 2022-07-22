@@ -5,7 +5,6 @@ import * as Joi from 'joi';
 import { UsersModule } from './users/users.module';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { LoggerModule } from 'nestjs-pino';
-import { HealthModule } from './health/health.module';
 import { ProdukModule } from './produk/produk.module';
 import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
@@ -76,7 +75,6 @@ import configuration from './config/configuration';
       inject: [ConfigService],
     }),
     UsersModule,
-    HealthModule,
     ProdukModule,
     AuthModule,
   ],
