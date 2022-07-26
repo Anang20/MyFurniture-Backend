@@ -40,13 +40,10 @@ export class UsersController {
       message: 'success',
     };
   }
-  @Get('cari_alamat')
-  async findAllAlamat() {
-    const [data, count] = await this.usersService.findAllAlamat();
-
+  @Get('cari_alamat/:id_user')
+  async findAllAlamat(@Param('id_user', ParseUUIDPipe) id_user: string) {
     return {
-      data,
-      count,
+      data: await this.usersService.findAlamat(id_user),
       statusCode: HttpStatus.OK,
       message: 'success',
     };

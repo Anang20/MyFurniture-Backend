@@ -7,8 +7,8 @@ import { User } from "../entities/user.entity";
 
 export class CreateAlamatDto {
 
-    @IsNotEmpty()
-    id_kelurahan: number
+    // @IsNotEmpty()
+    // id_kelurahan: number
 
     @IsNotEmpty()
     id_user: string

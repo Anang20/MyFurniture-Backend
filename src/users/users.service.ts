@@ -35,9 +35,9 @@ export class UsersService {
 
     const user = await this.usersRepository.findOneOrFail({where: { id_user: createAlamatDto.id_user}})
     const alamat =  new Alamat()
-    alamat.kelurahan = await this.kelurahanRepository.findOneOrFail({ where : {id_kelurahan: createAlamatDto.id_kelurahan}})
+    // alamat.kelurahan = await this.kelurahanRepository.findOneOrFail({ where : {id_kelurahan: createAlamatDto.id_kelurahan}})
     alamat.alamat = createAlamatDto.alamat
-    alamat.id_alamat_user = user.id_user
+    alamat.user = user
     alamat.longtitude = createAlamatDto.longtitude
     alamat.latitude = createAlamatDto.latitude
     const result = await this.alamatRepository.save(alamat);
@@ -52,16 +52,12 @@ export class UsersService {
   findAll() {
     return this.usersRepository.findAndCount();
   }
-
-  findAllAlamat(){
-    return this.alamatRepository.findAndCount()
-  }
  
   async findOne(id_user: string) {
     try {
       return await this.usersRepository.findOneOrFail({
         where: {
-          id_user,
+          id_user : id_user,
         },
       });
     } catch (e) {
@@ -80,14 +76,15 @@ export class UsersService {
   }
   async findAlamat(id_user: string) {
     try {
-      return await this.usersRepository.findOneOrFail({
+      const data = await this.usersRepository.findOneOrFail({
         where: {
           id_user,
         },
         relations : {
-          // alamat:true
+          alamat:true
         }
     });
+    return data.alamat
     } catch (e) {
       if (e instanceof EntityNotFoundError) {
         throw new HttpException(
