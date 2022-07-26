@@ -44,7 +44,7 @@ export class User {
   foto: string;
 
   @Column()
-  salt: string
+  salt: string;
 
   @CreateDateColumn()
   created_at: Date;

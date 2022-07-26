@@ -35,6 +35,5 @@ export class AuthController {
     @UseGuards(AuthGuard())
     async testAuth(@Req() req) {
         console.log(req.user)
-
     }
 }
