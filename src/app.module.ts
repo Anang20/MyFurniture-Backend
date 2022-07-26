@@ -7,6 +7,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { LoggerModule } from 'nestjs-pino';
 import { ProdukModule } from './produk/produk.module';
 import { AuthModule } from './auth/auth.module';
+import { CartModule } from './cart/cart.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -77,6 +78,7 @@ import configuration from './config/configuration';
     UsersModule,
     ProdukModule,
     AuthModule,
+    CartModule,
   ],
 })
 export class AppModule {}
