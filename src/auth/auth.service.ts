@@ -28,7 +28,7 @@ export class AuthService {
             data.nama_lengkap = request.nama_lengkap;
             data.email = request.email;
             data.salt = salt;
-            data.password = password
+            data.password = password;
             data.role= 2;
             data.no_telp=request.no_telp
             await this.userRepository.insert(data)

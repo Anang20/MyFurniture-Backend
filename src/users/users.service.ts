@@ -49,16 +49,21 @@ export class UsersService {
     });
   }
 
-  findAll() {
-    return this.usersRepository.findAndCount();
+ async findAll() {
+    const data = await this.usersRepository.createQueryBuilder('user')
+    .leftJoinAndSelect('user.role', 'role').getMany()
+    return data
   }
- 
+
   async findOne(id_user: string) {
     try {
       return await this.usersRepository.findOneOrFail({
         where: {
           id_user : id_user,
         },
+        relations : {
+          role : true,
+        }
       });
     } catch (e) {
       if (e instanceof EntityNotFoundError) {

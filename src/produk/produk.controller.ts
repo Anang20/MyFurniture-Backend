@@ -10,6 +10,7 @@ import { ProdukService } from './produk.service';
 export class ProdukController {
     constructor(private readonly produkService: ProdukService) {}
 
+    // tambah produk
   @Post()
   async create(@Body() createProdukDto: CreateProdukDto) {
     return {
@@ -19,6 +20,7 @@ export class ProdukController {
     };
   }
 
+  // mendapatkan data produk berdasarkan id
   @Get(':id_produk')
   async findOne(@Param('id_produk', ParseUUIDPipe) id_produk: string) {
     return {
@@ -28,6 +30,7 @@ export class ProdukController {
     };
   }
 
+  // mengedit produk
   @Put(':id_produk')
   async update(
     @Param('id_produk', ParseUUIDPipe) id_produk: string,
@@ -40,6 +43,7 @@ export class ProdukController {
     };
   }
 
+  // menghapus produk
   @Delete(':id_produk')
   async remove(@Param('id_produk', ParseUUIDPipe) id_produk: string) {
     await this.produkService.remove(id_produk);
@@ -50,6 +54,7 @@ export class ProdukController {
     };
   }
 
+  // mendapatkan semua data produk dan filter,paginate produk
   @Get()
   async index(
     @Query('page') page = 1,

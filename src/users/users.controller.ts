@@ -31,11 +31,10 @@ export class UsersController {
 
   @Get()
   async findAll() {
-    const [data, count] = await this.usersService.findAll();
+    const result = await this.usersService.findAll();
 
     return {
-      data,
-      count,
+      result,
       statusCode: HttpStatus.OK,
       message: 'success',
     };

@@ -3,6 +3,15 @@ import { User } from "./user.entity";
 
 @Entity()
 export class Role {
+    @OneToMany(
+        () => {
+            return User;
+        },
+        (callBack) => {
+            return callBack.id_user
+        }
+    )
+    
     @PrimaryColumn()
     id_role: number;
 
@@ -18,13 +27,5 @@ export class Role {
     @DeleteDateColumn()
     deleted_at: Date;
 
-    @OneToMany(
-        () => {
-            return User;
-        },
-        (callBack) => {
-            return callBack.id_user
-        }
-    )
-    user: User
+   
 }

@@ -3,7 +3,7 @@ import { Kecamatan } from "./kecamatan.entity";
 
 @Entity()
 export class Kelurahan{
-    @PrimaryColumn()
+    @PrimaryColumn({type:'varchar'})
     id_kelurahan: number;
 
     @ManyToOne(
