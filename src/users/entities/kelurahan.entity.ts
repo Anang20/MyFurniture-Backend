@@ -11,7 +11,7 @@ export class Kelurahan{
             return Kecamatan;
         },
         (callBack) => {
-            return callBack.id_kecamatan
+            return callBack.kelurahan;
         }
     )
     kecamatan: Kecamatan;

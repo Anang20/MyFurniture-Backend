@@ -23,7 +23,7 @@ export class Provinsi {
             return Kota;
         },
         (callBack) => {
-            return callBack.id_kota;
+            return callBack.provinsi;
         }
     )
     kota: Kota;

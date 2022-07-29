@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Kelurahan } from "./kelurahan.entity";
 import { Kota } from "./kota.entity";
 
 @Entity()
@@ -11,10 +12,13 @@ export class Kecamatan{
             return Kota;
         },
         (callBack) => {
-            return callBack.id_kota;
+            return callBack.kecamatan;
         }
     )
     kota: Kota;
+
+    @OneToMany(()=> Kelurahan, (callBack) => callBack.kecamatan)
+    kelurahan: Kelurahan
 
     @Column()
     nama_kecamatan: string;
