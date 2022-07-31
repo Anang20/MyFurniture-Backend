@@ -8,6 +8,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { ProdukModule } from './produk/produk.module';
 import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
+import { PaymentModule } from './payment/payment.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -79,6 +80,7 @@ import configuration from './config/configuration';
     ProdukModule,
     AuthModule,
     CartModule,
+    PaymentModule,
   ],
 })
 export class AppModule {}

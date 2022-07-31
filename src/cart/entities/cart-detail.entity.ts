@@ -1,5 +1,5 @@
 import { IsNotEmpty } from "class-validator";
-import { Produk } from "src/produk/entity/produk.entity";
+import { Produk } from "src/produk/entities/produk.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, JoinTable, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Cart } from "./cart.entity";
 

@@ -4,7 +4,7 @@ import { options, string } from 'joi';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { CreateProdukDto } from './dto/create-produk.dto';
 import { UpdateProdukDto } from './dto/update-produk.dto';
-import { Produk } from './entity/produk.entity';
+import { Produk } from './entities/produk.entity';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 
 @Injectable()
