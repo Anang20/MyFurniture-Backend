@@ -7,6 +7,7 @@ import { ProdukService } from './produk.service';
 @Module({
   imports: [TypeOrmModule.forFeature([Produk])],
   controllers: [ProdukController],
-  providers: [ProdukService]
+  providers: [ProdukService],
+  exports :[ProdukService]
 })
 export class ProdukModule {}

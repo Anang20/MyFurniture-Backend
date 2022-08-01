@@ -21,10 +21,7 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const result = await this.usersRepository.insert(createUserDto);
-    console.log(createUserDto);
-    
-
+    const result = await this.usersRepository.insert(createUserDto);   
     return this.usersRepository.findOneOrFail({
       where: {
         id_user: result.identifiers[0].id_user,

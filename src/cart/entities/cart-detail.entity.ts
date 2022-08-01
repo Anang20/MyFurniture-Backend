@@ -5,7 +5,7 @@ import { Cart } from "./cart.entity";
 
 @Entity()
 export class cartDetail {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     id_cart_detail: string
 
     @ManyToOne(() => Cart, (cart) => cart.detail)
