@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpStatus, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { CreateCartDetailDto } from './dto/create-cart-detail.dto';
 import { UpdateCartDetailDto } from './dto/update-cart-detail.dto';
@@ -29,5 +29,16 @@ export class CartController {
             statusCode: HttpStatus.OK,
             message: 'success',
           };
+    }
+
+    @Get(':id_cart')
+    async findAll(
+        @Param('id_cart', ParseUUIDPipe ) id_cart: string
+    ){
+        return {
+            data: await this.cartService.findAll(id_cart),
+            statuscode: HttpStatus.OK,
+            massage: 'succes'
+        }
     }
 }

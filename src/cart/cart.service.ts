@@ -1,19 +1,23 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsHalfWidth } from 'class-validator';
-import { Produk } from 'src/produk/entities/produk.entity';
 import { ProdukService } from 'src/produk/produk.service';
-import { DataSource, EntityNotFoundError, Repository } from 'typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
 import { CreateCartDetailDto } from './dto/create-cart-detail.dto';
 import { UpdateCartDetailDto } from './dto/update-cart-detail.dto';
 import { cartDetail } from './entities/cart-detail.entity';
+import { Cart } from './entities/cart.entity';
 
 @Injectable()
 export class CartService {
     constructor(
+
     @InjectRepository(cartDetail)
     private cartDetailRepository : Repository<cartDetail>,
     private produkService : ProdukService,
+
+    @InjectRepository(Cart)
+    private cart : Repository<Cart>
+    
     ){}
 
     async create(id_produk:string ,createCartDetailDto: CreateCartDetailDto) {
@@ -54,6 +58,7 @@ export class CartService {
         await this.cartDetailRepository.delete(id_cart_detail);
     }
 
+
     async update(id_cart_detail: string, updateCartDetailDto: UpdateCartDetailDto) {
       try {
         const hasil = await this.cartDetailRepository.findOneOrFail({
@@ -84,5 +89,29 @@ export class CartService {
           id_cart_detail,
         },
       });
+    }
+
+   async findAll(id_cart : string){
+      try {
+        const hasil = await this.cart.findOneOrFail({
+          where : {
+            id_cart : id_cart
+          },
+          relations : ['detail']
+        })
+        return hasil.detail
+      } catch (e) {
+        if (e instanceof EntityNotFoundError) {
+          throw new HttpException( 
+            {
+              statusCode: HttpStatus.NOT_FOUND,
+              error: 'Data not found',
+            },
+            HttpStatus.NOT_FOUND,
+          );
+        } else {
+          throw e;
+        }
+      }
     }
 }

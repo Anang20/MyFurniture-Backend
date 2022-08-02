@@ -1,7 +1,7 @@
 import { IsNotEmpty } from "class-validator";
 import { cartDetail } from "src/cart/entities/cart-detail.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Order } from "./order.entity";
+import { Order } from "../../order/entities/order.entity";
 
 @Entity()
 export class Payment {
