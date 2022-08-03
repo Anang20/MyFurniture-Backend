@@ -7,7 +7,7 @@ export class managementOngkir {
     id_harga_kirim  : string;
 
     @Column()
-    jarak: string;
+    jarak: number;
 
     @Column()
     harga_kirim: number;
