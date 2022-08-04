@@ -5,7 +5,7 @@ import { cartDetail } from "./cart-detail.entity";
 
 @Entity()
 export class Cart {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     id_cart : string
 
     @OneToMany(() => cartDetail, (cart) => cart.cart)
@@ -15,11 +15,15 @@ export class Cart {
     @JoinColumn()
     user: User
     
-    @Column()
+    @Column({
+        default: 0
+    })
     qty: number
 
-    @Column()
-    status: string
+    @Column({
+        default:false
+    })
+    status: boolean
     
     @CreateDateColumn()
     created_at: Date;

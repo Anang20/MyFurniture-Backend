@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProdukService } from 'src/produk/produk.service';
+import { User } from 'src/users/entities/user.entity';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { CreateCartDetailDto } from './dto/create-cart-detail.dto';
 import { UpdateCartDetailDto } from './dto/update-cart-detail.dto';
@@ -16,20 +17,36 @@ export class CartService {
     private produkService : ProdukService,
 
     @InjectRepository(Cart)
-    private cart : Repository<Cart>
+    private cartRepository : Repository<Cart>
     
     ){}
 
-    async create(id_produk:string ,createCartDetailDto: CreateCartDetailDto) {
+    async createCart(user: User){
+      console.log(user);
+      
+      const hasil = new Cart()
+      hasil.user = user
+      const result = await this.cartRepository.insert(hasil)
+      console.log(result);
+      
+    }
+
+    async createCartDetail(id_produk:string, id_cart: string ,createCartDetailDto: CreateCartDetailDto) {
         const produk = await this.produkService.findOne(id_produk)
+        const cart = await this.cartRepository.findOneOrFail({
+          where : {
+            id_cart
+          }, 
+        })
         const hasil = new cartDetail()
         hasil.kuantiti = createCartDetailDto.kuantiti
         hasil.harga_total = createCartDetailDto.kuantiti * produk.harga
         hasil.produk = produk
-        const result = await this.cartDetailRepository.insert(hasil)
+        hasil.cart = cart
+        const result = await this.cartDetailRepository.save(hasil)
         return this.cartDetailRepository.findOneOrFail({
           where: {
-            id_cart_detail: result.identifiers[0].id_cart_detail,
+            id_cart_detail: result.id_cart_detail,
           }
         });
       }
@@ -93,11 +110,13 @@ export class CartService {
 
    async findAll(id_cart : string){
       try {
-        const hasil = await this.cart.findOneOrFail({
+        const hasil = await this.cartRepository.findOneOrFail({
           where : {
             id_cart : id_cart
           },
-          relations : ['detail']
+          relations:{
+            detail:true 
+          }
         })
         return hasil.detail
       } catch (e) {
@@ -113,5 +132,9 @@ export class CartService {
           throw e;
         }
       }
+    }
+
+    async findCart(){
+      return await this.cartRepository.findAndCount()
     }
 }

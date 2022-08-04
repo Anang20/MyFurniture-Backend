@@ -8,7 +8,10 @@ export class cartDetail {
     @PrimaryGeneratedColumn('uuid')
     id_cart_detail: string
 
-    @ManyToOne(() => Cart, (cart) => cart.detail)
+    @ManyToOne(() => Cart, (cart) => cart.detail, {
+        onDelete: 'SET NULL'
+    })
+    @JoinTable()
     cart: Cart
 
     @OneToOne(() => Produk, (produk)=> produk.detail)

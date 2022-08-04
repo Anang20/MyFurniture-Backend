@@ -7,20 +7,21 @@ import { UpdateCartDetailDto } from './dto/update-cart-detail.dto';
 export class CartController {
     constructor (private readonly cartService: CartService) {}
 
-    @Post(':id_produk')
-    async create(
+    @Post(':id_produk/:id_cart')
+    async createCartDetail(
+        @Param('id_cart', ParseUUIDPipe ) id_cart: string,
         @Param('id_produk', ParseUUIDPipe ) id_produk: string,
         @Body() createCartDetailDto : CreateCartDetailDto
         ) {
         return {
-            data: await this.cartService.create(id_produk, createCartDetailDto),
+            data: await this.cartService.createCartDetail(id_produk, id_cart, createCartDetailDto),
             statusCode: HttpStatus.CREATED,
             message: 'success',
         }
     }
 
     @Put(':id_cart_detail')
-    async update(
+    async update(       
         @Param('id_cart_detail', ParseUUIDPipe ) id_cart_detail: string,
         @Body() updateCartDetailDto : UpdateCartDetailDto
     ){
@@ -41,4 +42,11 @@ export class CartController {
             massage: 'succes'
         }
     }
+
+    @Get()
+    async findCart(){
+       return this.cartService.findCart()
+    }
+    
+
 }
