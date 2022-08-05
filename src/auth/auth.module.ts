@@ -16,7 +16,7 @@ import { CartModule } from 'src/cart/cart.module';
     JwtModule.register({
       secret: 'topSecret20',
       signOptions: {
-        expiresIn: 86400,
+        expiresIn: 60,
       },
     }),
     TypeOrmModule.forFeature([User]),CartModule
