@@ -9,12 +9,35 @@ import {
   ParseUUIDPipe,
   HttpStatus,
   Query,
+  UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateAlamatDto } from './dto/create-alamat.dto';
 import { Alamat } from './entities/alamat.entity';
+import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { v4 as uuidv4 } from 'uuid';
+import { diskStorage } from 'multer';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Observable, of } from 'rxjs';
+import { User } from './entities/user.entity';
+
+const path = require('path');
+
+export const storage = {
+  storage: diskStorage({
+    destination: './upload/profileImage',
+    filename: (req, file, callback) => {
+      const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
+      const extension: string = path.parse(file.originalname).ext;
+      callback(null, `${filename}${extension}`)
+    },
+  })
+}
 
 @Controller('users')
 export class UsersController {
@@ -78,6 +101,18 @@ export class UsersController {
       message: 'success',
     };
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('foto', storage))
+  uploadFile(@UploadedFile() file, @Request() req): Observable<object>{ 
+    const user : User = req.user;
+    console.log(user);
+
+    return of({imagePath: file.filename});
+    
+  }
+
   @Post('create_alamat/:id_user')
   async createAlamat(@Body() createAlamatDto: CreateAlamatDto) {
     return {

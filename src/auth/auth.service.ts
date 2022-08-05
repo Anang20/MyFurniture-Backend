@@ -40,6 +40,9 @@ export class AuthService {
     async login(request: LoginDto) {
         try {
             const existUser = await this.userRepository.findOne({
+                relations: {
+                    role: true
+                },
                 where: {
                     email: request.email,
                     deleted_at: IsNull()
