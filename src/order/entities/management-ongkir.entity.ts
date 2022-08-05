@@ -1,10 +1,10 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Order } from "./order.entity";
 
 @Entity()
 export class managementOngkir {
-    @PrimaryGeneratedColumn('uuid')
-    id_harga_kirim  : string;
+    @PrimaryColumn()
+    id_harga_kirim  : number;
 
     @Column()
     jarak: number;

@@ -1,8 +1,9 @@
 import { cartDetail } from "src/cart/entities/cart-detail.entity";
 import { Cart } from "src/cart/entities/cart.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { managementOngkir } from "./management-ongkir.entity";
 import { Payment } from "../../payment/entities/payment.entity";
+import { Alamat } from "src/users/entities/alamat.entity";
 
 @Entity()
 export class Order {
