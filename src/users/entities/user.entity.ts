@@ -1,3 +1,4 @@
+import { Cart } from 'src/cart/entities/cart.entity';
 import {
   Entity,
   Column,
@@ -9,6 +10,7 @@ import {
   ManyToOne,
   OneToMany,
   JoinTable,
+  OneToOne,
 } from 'typeorm';
 import { Alamat } from './alamat.entity';
 import { Role } from './role.entity';
@@ -57,4 +59,7 @@ export class User {
 
   @OneToMany(() => Alamat, (alamat) => alamat.user)
   alamat: Alamat[]
+
+  @OneToOne(() => Cart, (cart)=> cart.user)
+  cart : Cart
 }

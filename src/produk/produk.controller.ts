@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpStatus, Param, ParseUUIDPipe, Post, 
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { CreateProdukDto } from './dto/create-produk.dto';
 import { UpdateProdukDto } from './dto/update-produk.dto';
-import { Produk } from './entity/produk.entity';
+import { Produk } from './entities/produk.entity';
 import { ProdukService } from './produk.service';
 
 

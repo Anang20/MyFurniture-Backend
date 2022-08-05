@@ -9,6 +9,8 @@ import { User } from 'src/users/entities/user.entity';
 import { LoginDto } from './dto/login.dto';
 import { Role } from 'src/users/entities/role.entity';
 import { query } from 'express';
+import { resourceLimits } from 'worker_threads';
+import { CartService } from 'src/cart/cart.service';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +18,7 @@ export class AuthService {
         @InjectRepository(User)
         private userRepository: Repository<User>,
         private jwtService: JwtService,
+        private cartService: CartService
     ) {
         
     }
@@ -31,7 +34,15 @@ export class AuthService {
             data.password = password;
             data.role= 2;
             data.no_telp=request.no_telp
-            await this.userRepository.insert(data)
+            const result = await this.userRepository.insert(data)
+            const user = await this.userRepository.findOne({
+                where:{
+                    id_user: result.identifiers[0].id_user
+                }
+            })
+
+
+            await this.cartService.createCart(user)   
         } catch (e) {
             throw e;
         }

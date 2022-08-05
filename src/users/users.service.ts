@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAlamatDto } from './dto/create-alamat.dto';
 import { Alamat } from './entities/alamat.entity';
 import { Kelurahan } from './entities/kelurahan.entity';
+import { CartService } from 'src/cart/cart.service';
 
 @Injectable()
 export class UsersService {
@@ -17,19 +18,19 @@ export class UsersService {
     @InjectRepository(Alamat) 
     private alamatRepository: Repository<Alamat>,
     @InjectRepository(Kelurahan)
-    private kelurahanRepository: Repository<Kelurahan>
+    private kelurahanRepository: Repository<Kelurahan>,
+    private cartService: CartService
   ) {}
 
   async create(createUserDto: CreateUserDto) {
     const result = await this.usersRepository.insert(createUserDto);
-    console.log(createUserDto);
-    
-
-    return this.usersRepository.findOneOrFail({
+    const data = await this.usersRepository.findOneOrFail({
       where: {
         id_user: result.identifiers[0].id_user,
       }, relations: ['kelurahan', 'kelurahan.kecamatan', 'kelurahan.kota', 'kelurahan.provinsi' ]
     });
+   
+    return data
   }
   async createAlamat(createAlamatDto: CreateAlamatDto) {
 

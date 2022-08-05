@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { CartController } from './cart.controller';
-import { Produk } from 'src/produk/entity/produk.entity';
+import { Cart } from './entities/cart.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { cartDetail } from './entities/cart-detail.entity';
+import { ProdukModule } from 'src/produk/produk.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Produk])],
+  imports: [TypeOrmModule.forFeature([Cart, cartDetail]), ProdukModule],
   providers: [CartService],
-  controllers: [CartController]
+  controllers: [CartController],
+  exports: [CartService]
 })
 export class CartModule {}

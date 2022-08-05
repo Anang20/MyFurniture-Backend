@@ -1,21 +1,30 @@
-import { IsBoolean, IsNotEmpty } from "class-validator";
-import { array, string } from "joi";
-import { CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Order } from "src/order/entities/order.entity";
+import { User } from "src/users/entities/user.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { cartDetail } from "./cart-detail.entity";
 
 @Entity()
-export class Cart{
+export class Cart {
     @PrimaryGeneratedColumn('uuid')
     id_cart : string
 
-    @IsNotEmpty()
-    id_user : string
+    @OneToMany(() => cartDetail, (cart) => cart.cart)
+    detail: cartDetail
 
-    @IsNotEmpty()
-    qty : number
+    @OneToOne(() => User, (user) => user.cart)
+    @JoinColumn()
+    user: User
+    
+    @Column({
+        default: 0
+    })
+    qty: number
 
-    @IsBoolean()
-    status : boolean
-
+    @Column({
+        default:false
+    })
+    status: boolean
+    
     @CreateDateColumn()
     created_at: Date;
 
@@ -25,4 +34,6 @@ export class Cart{
     @DeleteDateColumn()
     deleted_at: Date;
 
+    @OneToOne(()=> Order, (order)=> order.cart)
+    order: Order
 }

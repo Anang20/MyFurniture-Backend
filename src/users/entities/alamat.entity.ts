@@ -37,4 +37,5 @@ export class Alamat {
 
     @DeleteDateColumn()
     deleted_at: Date;
+
 }
