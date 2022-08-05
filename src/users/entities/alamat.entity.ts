@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Order } from "src/order/entities/order.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Kelurahan } from "./kelurahan.entity";
 import { User } from "./user.entity";
 
@@ -37,5 +38,8 @@ export class Alamat {
 
     @DeleteDateColumn()
     deleted_at: Date;
+
+    @OneToOne(()=> Order, order => order.alamat)
+    order: Order
 
 }

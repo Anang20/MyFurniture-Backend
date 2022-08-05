@@ -12,4 +12,13 @@ export class CreateOrderDto{
 
     @Column()
     id_card_detail : string
+    
+    @Column()
+    total_hrg_brg: number;
+
+    @Column()
+    total_hrg_krm: number;
+
+    @Column()
+    total_order: number;
 }

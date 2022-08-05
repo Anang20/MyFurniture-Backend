@@ -19,7 +19,6 @@ export class Payment {
     @Column()
     no_rek: number
 
-
     @IsNotEmpty()
     @Column()
     gambar_bukti: string;
