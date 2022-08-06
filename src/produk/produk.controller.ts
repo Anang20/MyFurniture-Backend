@@ -1,23 +1,60 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseUUIDPipe, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseUUIDPipe, Post, Put, Query, Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { diskStorage } from 'multer';
+import { v4 as uuidv4 } from 'uuid';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { CreateProdukDto } from './dto/create-produk.dto';
 import { UpdateProdukDto } from './dto/update-produk.dto';
 import { Produk } from './entities/produk.entity';
 import { ProdukService } from './produk.service';
+import { AuthGuard } from '@nestjs/passport';
 
+
+const path = require('path');
+
+export const storage = {
+  storage: diskStorage({
+    destination: './upload/produk',
+    filename: (req, file, callback) => {
+      const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
+      const extension: string = path.parse(file.originalname).ext;
+      callback(null, `${filename}${extension}`)
+    },
+  })
+}
 
 @Controller('produk')
 export class ProdukController {
     constructor(private readonly produkService: ProdukService) {}
 
     // tambah produk
+  @UseGuards(AuthGuard('jwt')) 
   @Post()
-  async create(@Body() createProdukDto: CreateProdukDto) {
-    return {
-      data: await this.produkService.create(createProdukDto),
-      statusCode: HttpStatus.CREATED,
-      message: 'success',
-    };
+  @UseInterceptors(FileInterceptor('gambar', storage))
+  async create(
+    @Body() createProdukDto: CreateProdukDto,
+    @UploadedFile() gambar: Express.Multer.File,
+    // @Request() req, 
+    ) {
+      const validasiGambar = [
+        'image/png',
+        'image/jpg',
+        'image/jpeg',
+        'image/svg',
+      ];
+      if (!validasiGambar.includes(gambar.mimetype)) {
+        return 'Tidak bisa menerima extensi gambar ini';
+      } else {
+        return {
+          data: await this.produkService.create(
+            createProdukDto,
+            gambar.filename,
+            // req,
+          ),
+          statusCode: HttpStatus.CREATED,
+          message: 'success',
+        };
+      }
   }
 
   // mendapatkan data produk berdasarkan id

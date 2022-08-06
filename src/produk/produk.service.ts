@@ -5,6 +5,7 @@ import { CreateProdukDto } from './dto/create-produk.dto';
 import { UpdateProdukDto } from './dto/update-produk.dto';
 import { Produk } from './entities/produk.entity';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class ProdukService {
@@ -13,14 +14,18 @@ export class ProdukService {
     private produkRepository: Repository<Produk>,
   ) {}
 
-  async create(createProdukDto: CreateProdukDto) {
-    const result = await this.produkRepository.insert(createProdukDto);
+  async create(createProdukDto: CreateProdukDto, gambar) {
 
-    return this.produkRepository.findOneOrFail({
-      where: {
-        id_produk: result.identifiers[0].id_produk,
-      }
-    });
+      const result = await this.produkRepository.insert({
+        ...createProdukDto,
+        gambar,
+      });
+
+      return this.produkRepository.findOneOrFail({
+        where: {
+          id_produk: result.identifiers[0].id_produk,
+        },
+      });
   }
 
   findAll() {

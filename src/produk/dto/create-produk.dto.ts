@@ -1,8 +1,7 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateProdukDto {
 
-  @IsNotEmpty()
   gambar: string;
 
   @IsNotEmpty()
