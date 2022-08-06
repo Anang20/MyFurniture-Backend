@@ -7,6 +7,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { resourceLimits } from 'worker_threads';
 import { CreateOngkirDto } from './dto/createOngkir.dto';
+import { CreateOrderDto } from './dto/createOrder.dto';
 import { managementOngkir } from './entities/management-ongkir.entity';
 import { Order } from './entities/order.entity';
 
@@ -36,8 +37,27 @@ export class OrderService {
         })
     }
     
-    async createOrder(id_card_detail: string){
-        
+    async createOrder(createOrder : CreateOrderDto){
+        const alamat = await this.alamatRepository.find({
+            where: {
+                id_alamat_user : createOrder.id_alamat
+            }
+        })
+        const produk = await this.cartDetailRepository.find({
+            where : {
+                id_cart_detail: createOrder.id_card_detail
+            }
+        })
+        const order = new Order()
+        order.detail = produk
+        order.alamat = alamat
+        order.total_hrg_brg = createOrder.total_hrg_brg
+        order.total_hrg_krm = createOrder.total_hrg_krm
+        order.total_order = createOrder.total_order
+        order.status = 'false'
+
+        await this.orderRepository.insert(order)    
+
     }
 
     async createOngkirTotal(id_alamat: string){

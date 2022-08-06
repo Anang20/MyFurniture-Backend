@@ -43,5 +43,9 @@ export class Order {
     deleted_at: Date
 
     @OneToOne(() => cartDetail, (detail)=> detail.produk)
-    detail: cartDetail
+    detail: cartDetail[]
+
+    @OneToOne(()=> Alamat, alamat => alamat.order)
+    @JoinColumn()
+    alamat: Alamat[]
 }
