@@ -14,13 +14,10 @@ export class ProdukService {
     private produkRepository: Repository<Produk>,
   ) {}
 
-  async create(createProdukDto: CreateProdukDto, gambar) {
-
+  async create(createProdukDto: CreateProdukDto) {
       const result = await this.produkRepository.insert({
         ...createProdukDto,
-        gambar,
       });
-
       return this.produkRepository.findOneOrFail({
         where: {
           id_produk: result.identifiers[0].id_produk,

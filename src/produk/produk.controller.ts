@@ -28,35 +28,16 @@ export class ProdukController {
     constructor(private readonly produkService: ProdukService) {}
 
     // tambah produk
-  @UseGuards(AuthGuard('jwt')) 
   @Post()
-  @UseInterceptors(FileInterceptor('gambar', storage))
-  async create(
-    @Body() createProdukDto: CreateProdukDto,
-    @UploadedFile() gambar: Express.Multer.File,
-    // @Request() req, 
-    ) {
-      const validasiGambar = [
-        'image/png',
-        'image/jpg',
-        'image/jpeg',
-        'image/svg',
-      ];
-      if (!validasiGambar.includes(gambar.mimetype)) {
-        return 'Tidak bisa menerima extensi gambar ini';
-      } else {
+  async create(@Body() createProdukDto: CreateProdukDto){
         return {
           data: await this.produkService.create(
-            createProdukDto,
-            gambar.filename,
-            // req,
+            createProdukDto
           ),
           statusCode: HttpStatus.CREATED,
           message: 'success',
         };
       }
-  }
-
   // Mencari produk
   @Get('/search/produk')
   async findProduct(
