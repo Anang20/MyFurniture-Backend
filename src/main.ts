@@ -6,6 +6,7 @@ import { Logger } from 'nestjs-pino';
 import { CorrelationIdMiddleware } from './utils/correlation-id.middleware';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -14,6 +15,7 @@ async function bootstrap() {
 
   app.disable('x-powered-by');
   app.use(CorrelationIdMiddleware());
+  app.useStaticAssets(join(__dirname, '..', 'public'));
   app.useLogger(logger);
   app.enableCors();
   app.useGlobalPipes(
