@@ -11,6 +11,8 @@ import { CartModule } from './cart/cart.module';
 import { PaymentModule } from './payment/payment.module';
 import { OrderModule } from './order/order.module';
 import { FileModule } from './file/file.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { RequestModule } from './request/request.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -85,6 +87,8 @@ import configuration from './config/configuration';
     PaymentModule,
     OrderModule,
     FileModule,
+    DashboardModule,
+    RequestModule,
   ],
 })
 export class AppModule {}
