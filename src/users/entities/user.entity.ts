@@ -1,15 +1,14 @@
 import { Cart } from 'src/cart/entities/cart.entity';
+import { Request } from 'src/request/entity/request.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  VersionColumn,
   CreateDateColumn,
   ManyToOne,
   OneToMany,
-  JoinTable,
   OneToOne,
 } from 'typeorm';
 import { Alamat } from './alamat.entity';
@@ -62,4 +61,7 @@ export class User {
 
   @OneToOne(() => Cart, (cart)=> cart.user)
   cart : Cart
+
+  @OneToOne(() => Request, request => request.user)
+  request: Request
 }
