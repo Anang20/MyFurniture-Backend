@@ -40,8 +40,6 @@ export class AuthService {
                     id_user: result.identifiers[0].id_user
                 }
             })
-
-
             await this.cartService.createCart(user)   
         } catch (e) {
             throw e;

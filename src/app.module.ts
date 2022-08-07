@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
 import { PaymentModule } from './payment/payment.module';
 import { OrderModule } from './order/order.module';
+import { FileModule } from './file/file.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -83,6 +84,7 @@ import configuration from './config/configuration';
     CartModule,
     PaymentModule,
     OrderModule,
+    FileModule,
   ],
 })
 export class AppModule {}
