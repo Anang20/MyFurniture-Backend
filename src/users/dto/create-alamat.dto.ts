@@ -2,8 +2,8 @@ import { IsNotEmpty } from "class-validator";
 
 export class CreateAlamatDto {
 
-    // @IsNotEmpty()
-    // id_kelurahan: number
+    @IsNotEmpty()
+    id_kelurahan: number
 
     @IsNotEmpty()
     id_user: string

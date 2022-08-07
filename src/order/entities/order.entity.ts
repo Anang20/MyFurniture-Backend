@@ -29,10 +29,7 @@ export class Order {
 
     @Column()
     total_order: number;
-
-    @Column()
-    status: string;
-
+    
     @CreateDateColumn()
     created_at: Date
 

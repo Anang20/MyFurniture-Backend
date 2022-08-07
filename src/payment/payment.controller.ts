@@ -27,7 +27,7 @@ export class PaymentController {
   async remove(@Param('id_payment', ParseUUIDPipe) id_payment: string){
     await this.paymentService.remove(id_payment)
     return {
-      tatusCode: HttpStatus.OK,
+      statusCode: HttpStatus.OK,
       massage: 'success',
     }
   }
@@ -36,7 +36,16 @@ export class PaymentController {
   async approve(@Param('id_payment', ParseUUIDPipe) id_payment: string){
     return {
       data: await this.paymentService.acc(id_payment),
-      tatusCode: HttpStatus.OK,
+      statusCode: HttpStatus.OK,
+      massage: 'success',
+    }
+  }
+
+  @Get()
+  async findAllAcc(){
+    return {
+      data: await this.paymentService.findAllAcc(),
+      statusCode: HttpStatus.OK,
       massage: 'success',
     }
   }

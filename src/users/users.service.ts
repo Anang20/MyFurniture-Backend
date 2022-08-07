@@ -20,30 +20,33 @@ export class UsersService {
     private alamatRepository: Repository<Alamat>,
     @InjectRepository(Kelurahan)
     private kelurahanRepository: Repository<Kelurahan>,
-    private cartService: CartService
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
-    const result = await this.usersRepository.insert(createUserDto);
-    const data = await this.usersRepository.findOneOrFail({
-      where: {
-        id_user: result.identifiers[0].id_user,
-      }, relations: ['kelurahan', 'kelurahan.kecamatan', 'kelurahan.kota', 'kelurahan.provinsi' ]
-    });
-   
-    return data
+  async findKeluarahan(){
+    const alamat = await this.alamatRepository.find({
+      relations: ['kelurahan', 'kelurahan.kecamatan', 'kelurahan.kota', 'kelurahan.provinsi']
+    })
+    const [kelurahan, kecamatan, kota, provinsi] = alamat
+    return {
+      provinsi: provinsi,
+      kota: kota,
+      kecamatan: kecamatan,
+      kelurahan: kelurahan
+    }
   }
+  
   async createAlamat(createAlamatDto: CreateAlamatDto) {
-
-    const user = await this.usersRepository.findOneOrFail({where: { id_user: createAlamatDto.id_user}})
+    const user = await this.usersRepository.findOneOrFail({
+      where: { id_user: createAlamatDto.id_user
+      },
+    })
     const alamat =  new Alamat()
-    // alamat.kelurahan = await this.kelurahanRepository.findOneOrFail({ where : {id_kelurahan: createAlamatDto.id_kelurahan}})
+    alamat.kelurahan = await this.kelurahanRepository.findOneOrFail({ where : {id_kelurahan: createAlamatDto.id_kelurahan}})
     alamat.alamat = createAlamatDto.alamat
     alamat.user = user
     alamat.longtitude = createAlamatDto.longtitude
     alamat.latitude = createAlamatDto.latitude
     const result = await this.alamatRepository.save(alamat);
-
     return this.alamatRepository.findOneOrFail({
       where: {
         id_alamat_user: result.id_alamat_user,
@@ -81,6 +84,7 @@ export class UsersService {
       }
     }
   }
+
   async findAlamat(id_user: string) {
     try {
       const data = await this.usersRepository.findOneOrFail({

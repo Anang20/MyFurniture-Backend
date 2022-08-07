@@ -25,6 +25,7 @@ export class PaymentService {
       hasil.no_rek = createPaymentDto.no_rek
       hasil.gambar_bukti = createPaymentDto.gambar
       hasil.order = order
+      hasil.status = 'menunggu'
       await this.paymentRepository.insert(hasil)
       return await this.paymentRepository.findOneOrFail({
         where: {
@@ -60,4 +61,13 @@ export class PaymentService {
         }
       })
     }
+
+    async findAllAcc(){
+      return await this.paymentRepository.findAndCount({
+        where: {
+          status: 'diterima'
+        }
+      })
+    }
+
 }
