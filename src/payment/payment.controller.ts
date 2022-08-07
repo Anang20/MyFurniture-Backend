@@ -23,7 +23,7 @@ export class PaymentController {
     }
   }
 
-  @Delete(':id_payment')
+  @Delete('delete/:id_payment')
   async remove(@Param('id_payment', ParseUUIDPipe) id_payment: string){
     await this.paymentService.remove(id_payment)
     return {
