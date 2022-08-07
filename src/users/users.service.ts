@@ -8,6 +8,7 @@ import { CreateAlamatDto } from './dto/create-alamat.dto';
 import { Alamat } from './entities/alamat.entity';
 import { Kelurahan } from './entities/kelurahan.entity';
 import { CartService } from 'src/cart/cart.service';
+import { string } from 'joi';
 
 @Injectable()
 export class UsersService {
@@ -125,7 +126,7 @@ export class UsersService {
       } else {
         throw e;
       }
-    }
+    } 
 
     await this.usersRepository.update(id_user, updateUserDto);
 
@@ -135,6 +136,29 @@ export class UsersService {
       },
     });
   }
+
+  async updateFoto(id_user: string, foto) {
+    try {
+      await this.usersRepository.findOneOrFail({
+        where: {
+          id_user,
+        },
+      });
+    } catch (e) {
+      if (e instanceof EntityNotFoundError) {
+        throw new HttpException (
+          {
+            statusCode: HttpStatus.NOT_FOUND,
+            error: 'Data Not Found',
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      } else {
+        throw e;
+      }
+    }
+    return await this.usersRepository.update(id_user, {foto});
+  } 
 
   async remove(id_user: string) {
     try {

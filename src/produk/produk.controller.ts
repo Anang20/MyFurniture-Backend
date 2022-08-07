@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseUUIDPipe, Post, Put, Query, Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, DefaultValuePipe, Delete, Get, HttpStatus, Param, ParseIntPipe, ParseUUIDPipe, Post, Put, Query, Request, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -14,7 +14,7 @@ const path = require('path');
 
 export const storage = {
   storage: diskStorage({
-    destination: './upload/produk',
+    destination: './public/img/produk',
     filename: (req, file, callback) => {
       const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
       const extension: string = path.parse(file.originalname).ext;
@@ -57,6 +57,21 @@ export class ProdukController {
       }
   }
 
+  // Mencari produk
+  @Get('/search/produk')
+  async findProduct(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number = 5,
+    @Query('search') search: string,
+  ): Promise<Pagination<Produk>> {
+    limit = limit > 100 ? 100 : limit;
+    return this.produkService.findProduk(
+      { page, limit, route: '/produk' },
+      search,
+    );
+  }
+
+
   // mendapatkan data produk berdasarkan id
   @Get(':id_produk')
   async findOne(@Param('id_produk', ParseUUIDPipe) id_produk: string) {
@@ -67,18 +82,34 @@ export class ProdukController {
     };
   }
 
+  @Get(':imgpath')
+  seeUploadedFile(@Param('imgpath') gambar, @Res() res) {
+    return res.sendFile(gambar, { root: './public/img/produk' });
+  }
+
+
   // mengedit produk
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id_produk')
+  @UseInterceptors(FileInterceptor('gambar', storage))
   async update(
     @Param('id_produk', ParseUUIDPipe) id_produk: string,
     @Body() updateProdukDto: UpdateProdukDto,
+    @UploadedFile() gambar: Express.Multer.File,
+    @Request() req,
   ) {
     return {
-      data: await this.produkService.update(id_produk, updateProdukDto),
+      data: await this.produkService.update(
+        req,
+        id_produk,
+        updateProdukDto,
+        gambar.filename,
+      ),
       statusCode: HttpStatus.OK,
       message: 'success',
     };
   }
+
 
   // menghapus produk
   @Delete(':id_produk')
@@ -95,7 +126,7 @@ export class ProdukController {
   @Get()
   async index(
     @Query('page') page = 1,
-    @Query('limit') limit = 10,
+    @Query('limit') limit = 14,
     @Query('nama_produk') nama_produk: string,
   ): Promise<Pagination<Produk>> {
     limit = limit > 100 ? 100 : limit; 

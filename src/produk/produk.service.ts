@@ -28,6 +28,20 @@ export class ProdukService {
       });
   }
 
+  async findProduk(
+    options: IPaginationOptions,
+    search: string,
+  ): Promise<Pagination<Produk>> {
+    const query = this.produkRepository.createQueryBuilder('produk');
+
+    if (search) {
+      query
+        .where('produk.nama_produk ilike :search', { search: `%${search}%` })
+    }
+    await query.getMany();
+    return paginate<Produk>(query, options);
+  }
+
   findAll() {
     return this.produkRepository.findAndCount();
   }
@@ -54,7 +68,8 @@ export class ProdukService {
     }
   }
 
-  async update(id_produk: string, updateProdukDto: UpdateProdukDto) {
+  
+  async update(req, id_produk: string, updateUserDto: UpdateProdukDto, gambar) {
     try {
       await this.produkRepository.findOneOrFail({
         where: {
@@ -75,7 +90,10 @@ export class ProdukService {
       }
     }
 
-    await this.produkRepository.update(id_produk, updateProdukDto);
+    await this.produkRepository.update(id_produk, {
+      ...updateUserDto,
+      gambar,
+    });
 
     return this.produkRepository.findOneOrFail({
       where: {
@@ -83,6 +101,7 @@ export class ProdukService {
       },
     });
   }
+
 
   async remove(id_produk: string) {
     try {

@@ -13,6 +13,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Request,
+  Res,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -25,12 +26,13 @@ import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Observable, of } from 'rxjs';
 import { User } from './entities/user.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 const path = require('path');
 
 export const storage = {
   storage: diskStorage({
-    destination: './upload/profileImage',
+    destination: './public/img/profile',
     filename: (req, file, callback) => {
       const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
       const extension: string = path.parse(file.originalname).ext;
@@ -62,6 +64,7 @@ export class UsersController {
       message: 'success',
     };
   }
+  
   @Get('cari_alamat/:id_user')
   async findAllAlamat(@Param('id_user', ParseUUIDPipe) id_user: string) {
     return {
@@ -80,17 +83,53 @@ export class UsersController {
     };
   }
 
-  @Put(':id_user')
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/:id_user')
   async update(
-    @Param('id_user', ParseUUIDPipe) id_user: string,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
+    @Param('id_user', ParseUUIDPipe) id_user: string, 
+    @Body() updateUserDto: UpdateUserDto) {
+      return {
+        data: await this.usersService.update(id_user, updateUserDto),
+        statusCode: HttpStatus.OK,
+        message: 'success',
+      };
+  }
+
+  @Put('edit/foto/a')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(FileInterceptor('foto', storage))
+  async updateFoto(
+    @Request() req,
+    @UploadedFile() foto: Express.Multer.File,
+  ) { 
+        
+    console.log(foto.filename);
+    
     return {
-      data: await this.usersService.update(id_user, updateUserDto),
+      data: await this.usersService.updateFoto(
+        req.user.id_user,
+        foto.filename,
+      ),
       statusCode: HttpStatus.OK,
       message: 'success',
     };
   }
+
+  @Get('get_foto_profil/:foto/')
+  async getFoto(@Param('foto') foto, @Res() res) {
+    return await res.sendFile(foto, { root: './public/img/profile' });
+  }
+
+  // async update(
+  //   @Param('id_user', ParseUUIDPipe) id_user: string,
+  //   @Body() updateUserDto: UpdateUserDto,
+  // ) {
+  //   return {
+  //     data: await this.usersService.update(id_user, updateUserDto),
+  //     statusCode: HttpStatus.OK,
+  //     message: 'success',
+  //   };
+  // }
 
   @Delete(':id_user')
   async remove(@Param('id_user', ParseUUIDPipe) id_user: string) {
@@ -102,16 +141,16 @@ export class UsersController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('foto', storage))
-  uploadFile(@UploadedFile() file, @Request() req): Observable<object>{ 
-    const user : User = req.user;
-    console.log(user);
+  // @UseGuards(JwtAuthGuard)
+  // @Put('upload')
+  // @UseInterceptors(FileInterceptor('foto', storage))
+  // uploadFile(@UploadedFile() file, @Request() req): Observable<object>{ 
+  //   const user : User = req.user;
+  //   console.log(user);
 
-    return of({imagePath: file.filename});
+  //   return of({imagePath: file.filename});
     
-  }
+  // }
 
   @Post('create_alamat/:id_user')
   async createAlamat(@Body() createAlamatDto: CreateAlamatDto) {

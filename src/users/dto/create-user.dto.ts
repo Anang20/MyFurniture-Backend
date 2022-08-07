@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, Matches } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, Matches, MaxLength, MinLength } from 'class-validator';
 import { Role } from '../entities/role.entity';
 
 export class CreateUserDto {
@@ -13,7 +13,9 @@ export class CreateUserDto {
   no_telp: number;    
   
   @IsNotEmpty()   
-  @Matches(/^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^*-]).{8,}/)   
+  @MinLength(8)
+  @MaxLength(30)
+  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^*-]).*$/) 
   password: string;    
   
   @IsOptional()
