@@ -18,22 +18,7 @@ import {
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateAlamatDto } from './dto/create-alamat.dto';
-import { v4 as uuidv4 } from 'uuid';
-import { diskStorage } from 'multer';
 import { AuthGuard } from '@nestjs/passport';
-
-const path = require('path');
-
-export const storage = {
-  storage: diskStorage({
-    destination: './public/img/profile',
-    filename: (req, file, callback) => {
-      const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
-      const extension: string = path.parse(file.originalname).ext;
-      callback(null, `${filename}${extension}`)
-    },
-  })
-}
 
 @Controller('users')
 export class UsersController {
@@ -49,7 +34,7 @@ export class UsersController {
       message: 'success',
     };
   }
-  
+
   @Get('cari_alamat/:id_user')
   async findAllAlamat(@Param('id_user', ParseUUIDPipe) id_user: string) {
     return {
@@ -59,7 +44,7 @@ export class UsersController {
     };
   }
 
-  @Get(':id_user')
+  @Get('cari_user/:id_user')
   async findOne(@Param('id_user', ParseUUIDPipe) id_user: string) {
     return {
       data: await this.usersService.findOne(id_user),
@@ -68,16 +53,45 @@ export class UsersController {
     };
   }
 
+  @Get('/provinsi/provinsi')
+  async cariProvinsi() {
+    return {
+      data: await this.usersService.findProvinsi(),
+    };
+  }
+
+  @Get('/kota/:id_provinsi')
+  async cariKota(@Param('id_provinsi') id_provinsi: number) {
+    return {
+      data: await this.usersService.findKota(id_provinsi),
+    };
+  }
+
+  @Get('/kecamatan/:id_kota')
+  async cariKecamatan(@Param('id_kota') id_kota:number) {
+    return {
+      data: await this.usersService.findKecamatan(id_kota),
+    };
+  }
+
+  @Get('/kelurahan/:id_kecamatan')
+  async cariKelurahan(@Param('id_kecamatan') id_kecamatan: number) {
+    return {
+      data: await this.usersService.findKelurahan(id_kecamatan),
+    };
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @Put('/:id_user')
   async update(
-    @Param('id_user', ParseUUIDPipe) id_user: string, 
-    @Body() updateUserDto: UpdateUserDto) {
-      return {
-        data: await this.usersService.update(id_user, updateUserDto),
-        statusCode: HttpStatus.OK,
-        message: 'success',
-      };
+    @Param('id_user', ParseUUIDPipe) id_user: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return {
+      data: await this.usersService.update(id_user, updateUserDto),
+      statusCode: HttpStatus.OK,
+      message: 'success',
+    };
   }
 
   @Delete(':id_user')
@@ -90,7 +104,7 @@ export class UsersController {
     };
   }
 
-  @Post('create_alamat/:id_user')
+  @Post('create_alamat')
   async createAlamat(@Body() createAlamatDto: CreateAlamatDto) {
     return {
       data: await this.usersService.createAlamat(createAlamatDto),
@@ -107,4 +121,3 @@ export class UsersController {
     };
   }
 }
-

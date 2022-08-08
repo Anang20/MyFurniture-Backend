@@ -1,5 +1,5 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseUUIDPipe, Post } from '@nestjs/common';
-import { CreateOngkirDto } from './dto/createOngkir.dto';
+import { Body, Controller, Get, HttpStatus, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
+import { UpdateOngkirDto } from './dto/updateOngkir.dto';
 import { CreateOrderDto } from './dto/createOrder.dto';
 import { OrderService } from './order.service';
 
@@ -9,14 +9,15 @@ export class OrderController {
         private readonly orderService : OrderService
     ){}
 
-    @Get()
-    async createDefaultOngkir(@Body() createOngkir : CreateOngkirDto){
+    @Put('ongkir')
+    async updateOngkir(@Body() updateOngkirDto : UpdateOngkirDto){
         return {
-            data: await this.orderService.createDefaultOngkir(createOngkir),
-            statusCode: HttpStatus.CREATED,
+            data: await this.orderService.updateOngkir(updateOngkirDto),
+            statusCode: HttpStatus.OK,
             massage : 'success'
         }
     }
+
     @Post(':id_alamat')
     async createOngkirTotal(
         @Param('id_alamat', ParseUUIDPipe) id_alamat:string,
@@ -25,6 +26,13 @@ export class OrderController {
             data: await this.orderService.createOngkirTotal(id_alamat),
             statusCode: HttpStatus.CREATED,
             massage : 'success'
+        }
+    }
+
+    @Get('id_produk')
+    async totalHargaProduk(@Param('id_produk') id_produk: string){
+        return {
+            data : await this.orderService.totalHargaProduk(id_produk)
         }
     }
 

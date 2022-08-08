@@ -23,7 +23,7 @@ export class Kota {
         },
         (callBack) => {
             return callBack.kota;
-        }
+        },
     )
     kecamatan: Kecamatan;
 

@@ -14,7 +14,7 @@ export class Order {
     @JoinColumn()
     cart: Cart
     
-    @OneToOne(()=> managementOngkir, (ongkir) => ongkir.order)
+    @OneToOne(()=> managementOngkir)
     @JoinColumn()
     ongkir: managementOngkir
 

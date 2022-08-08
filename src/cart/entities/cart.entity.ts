@@ -11,7 +11,7 @@ export class Cart {
     @OneToMany(() => cartDetail, (cart) => cart.cart)
     detail: cartDetail
 
-    @OneToOne(() => User, (user) => user.cart)
+    @OneToOne(() => User, (user) => user.cart, {onDelete: 'CASCADE'})
     @JoinColumn()
     user: User
     

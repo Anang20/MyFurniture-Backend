@@ -24,7 +24,7 @@ export class Provinsi {
         },
         (callBack) => {
             return callBack.provinsi;
-        }
+        }, 
     )
     kota: Kota;
 }

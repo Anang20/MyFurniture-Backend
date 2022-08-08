@@ -1,5 +1,5 @@
 import { Order } from "src/order/entities/order.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Kelurahan } from "./kelurahan.entity";
 import { User } from "./user.entity";
 
@@ -27,7 +27,8 @@ export class Alamat {
     @Column()
     longtitude: string
 
-    @ManyToOne(() =>  User)
+    @ManyToOne(() =>  User, user => user.alamat, {onDelete:'CASCADE'})
+    @JoinTable()
     user: User
 
     @CreateDateColumn()
