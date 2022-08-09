@@ -23,16 +23,17 @@ export class OrderController {
         @Param('id_alamat', ParseUUIDPipe) id_alamat:string,
     ){
         return {
-            data: await this.orderService.createOngkirTotal(id_alamat),
+            Data: await this.orderService.createOngkirTotal(id_alamat),
             statusCode: HttpStatus.CREATED,
             massage : 'success'
         }
     }
 
-    @Get('id_produk')
-    async totalHargaProduk(@Param('id_produk') id_produk: string){
+    @Get('/total_ongkir/:id_cart')
+    async totalHargaProduk(@Param('id_cart', ParseUUIDPipe) id_cart: string){
         return {
-            data : await this.orderService.totalHargaProduk(id_produk)
+            data : await this.orderService.totalHargaProduk(id_cart),
+            statusCode: HttpStatus.OK
         }
     }
 

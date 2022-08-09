@@ -10,7 +10,7 @@ import { Cart } from './entities/cart.entity';
 
 @Injectable()
 export class CartService {
-    constructor(
+    constructor(            
     @InjectRepository(cartDetail)
     private cartDetailRepository : Repository<cartDetail>,
     private produkService : ProdukService,
@@ -39,6 +39,7 @@ export class CartService {
         hasil.harga_total = createCartDetailDto.kuantiti * produk.harga
         hasil.produk = produk
         hasil.cart = cart
+        hasil.status = 'tidak-dipilih'
         const result = await this.cartDetailRepository.save(hasil)
         return this.cartDetailRepository.findOneOrFail({
           where: {
@@ -67,10 +68,23 @@ export class CartService {
             throw e;
           }
         }
-    
         await this.cartDetailRepository.delete(id_cart_detail);
     }
 
+    async ceklist(id_cart_detail:string){
+      const hasil = await this.cartDetailRepository.findOneOrFail({
+        where: {
+          id_cart_detail: id_cart_detail
+        }
+      })
+      hasil.status= 'dipilih'
+      await this.cartDetailRepository.save(hasil)
+      return this.cartDetailRepository.findOneOrFail({
+        where: {
+          id_cart_detail: hasil.id_cart_detail
+        }
+      })
+    }
 
     async update(id_cart_detail: string, updateCartDetailDto: UpdateCartDetailDto) {
       try {
@@ -79,7 +93,6 @@ export class CartService {
             id_cart_detail : id_cart_detail
           }
         })
-        
         hasil.harga_total = hasil.harga_total / hasil.kuantiti * updateCartDetailDto.kuantiti
         hasil.kuantiti = updateCartDetailDto.kuantiti
         await this.cartDetailRepository.save(hasil);

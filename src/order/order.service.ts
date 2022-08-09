@@ -9,6 +9,7 @@ import { UpdateOngkirDto } from './dto/updateOngkir.dto';
 import { CreateOrderDto } from './dto/createOrder.dto';
 import { managementOngkir } from './entities/management-ongkir.entity';
 import { Order } from './entities/order.entity';
+import { Produk } from 'src/produk/entities/produk.entity';
 
 @Injectable()
 export class OrderService {
@@ -24,7 +25,9 @@ export class OrderService {
         @InjectRepository(cartDetail)
         private cartDetailRepository: Repository<cartDetail>,
         @InjectRepository(User)
-        private userRepository: Repository<User>
+        private userRepository: Repository<User>,
+        @InjectRepository(Produk)
+        private produkRepository: Repository<Produk>
     ){}
 
     // Untuk Admin
@@ -46,8 +49,32 @@ export class OrderService {
     
     // Untuk Users
 
-    async totalHargaProduk(id_produk:string){
-        
+    async totalHargaProduk(id_cart: string){
+        const Cart = await this.cartRepository.find({
+            relations:{
+                detail: true
+            },
+            where : {
+                id_cart : id_cart,
+                detail:{
+                    status: 'dipilih'
+                }
+            }, 
+        })
+        const detail= []
+        detail[0]= Cart[0].detail
+        let ongkir = []
+        const harga: number[] = []
+        detail[0].map(async (i) => {    
+           await harga.push(i.harga_total)
+        })     
+        ongkir.map(async (item) =>{
+            harga.push(item)
+        })
+        const totalHarga = harga.reduce((a, b) => {
+            return a + b
+        })
+        return totalHarga
     }
 
     async createOrder(createOrder : CreateOrderDto){

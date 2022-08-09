@@ -97,7 +97,6 @@ export class UsersController {
   @Delete(':id_user')
   async remove(@Param('id_user', ParseUUIDPipe) id_user: string) {
     await this.usersService.remove(id_user);
-
     return {
       statusCode: HttpStatus.OK,
       message: 'success',
