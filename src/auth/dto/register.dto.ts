@@ -4,7 +4,7 @@ export class RegisterDto {
     
     @IsNotEmpty()
     @IsString()
-    @MinLength(6)
+    @MinLength(5)
     @MaxLength(30)
     nama_lengkap: string;
 
