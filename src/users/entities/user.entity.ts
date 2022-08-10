@@ -10,6 +10,7 @@ import {
   ManyToOne,
   OneToMany,
   OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Alamat } from './alamat.entity';
 import { Role } from './role.entity';
@@ -24,7 +25,7 @@ export class User {
       return Role;               
     },
     (callBack) => {
-      return callBack.id_role
+      return callBack.user
     }
   )
   role: number;

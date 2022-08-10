@@ -18,12 +18,12 @@ export class OrderController {
         }
     }
 
-    @Post(':id_alamat')
+    @Post('ongkir/:id_alamat_user')
     async createOngkirTotal(
-        @Param('id_alamat', ParseUUIDPipe) id_alamat:string,
+        @Param('id_alamat_user', ParseUUIDPipe) id_alamat_user:string,
     ){
         return {
-            Data: await this.orderService.createOngkirTotal(id_alamat),
+            Data: await this.orderService.createOngkirTotal(id_alamat_user),
             statusCode: HttpStatus.CREATED,
             massage : 'success'
         }

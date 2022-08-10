@@ -1,10 +1,21 @@
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import * as moment from 'moment';
 import path from 'path';
+import { Produk } from 'src/produk/entities/produk.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Repository } from 'typeorm';
 import * as uuid from 'uuid'
+import { UpdateFotoDto } from './dto/updateFotoUser.dto';
 @Injectable()
 export class FileService {
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    @InjectRepository(Produk)
+    private produkRepository: Repository<Produk>
+  ){}
   async renameUploadFile(filename: string) {
     const filenameArr = filename.split('/');
 
@@ -40,5 +51,27 @@ export class FileService {
     }
     
   };
+
+  async updateFotoUser( id_user: string, updateFotoDto: UpdateFotoDto){
+      const user = await this.userRepository.findOneOrFail({
+        where: {
+          id_user,
+        }
+      })
+      user.foto = updateFotoDto.foto
+      await this.userRepository.save(user)
+      return await this.userRepository.findOneOrFail({
+        where : {
+          id_user
+        }
+      })
+  }
+
+  async updateFotoProduk(gambar: string, id_produk){
+    const produk = await this.produkRepository.findOneOrFail(id_produk)
+    produk.gambar = gambar
+    await this.produkRepository.save(produk)
+    return await this.produkRepository.findOneOrFail(id_produk)
+}
 
 }

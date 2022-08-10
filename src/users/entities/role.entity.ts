@@ -8,9 +8,10 @@ export class Role {
             return User;
         },
         (callBack) => {
-            return callBack.id_user
+            return callBack.role
         }
     )
+    user: User
     
     @PrimaryColumn()
     id_role: number;
@@ -27,5 +28,4 @@ export class Role {
     @DeleteDateColumn()
     deleted_at: Date;
 
-   
 }

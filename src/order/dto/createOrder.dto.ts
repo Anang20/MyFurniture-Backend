@@ -6,10 +6,10 @@ export class CreateOrderDto{
 
     @Column()
     id_alamat: string
-
-    @Column()
-    id_card_detail : string
     
+    @Column()
+    id_harga_kirim: string
+
     @Column()
     total_hrg_brg: number;
 
