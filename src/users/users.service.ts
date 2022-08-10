@@ -3,12 +3,16 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { generateString, InjectRepository } from '@nestjs/typeorm';
 import { CreateAlamatDto } from './dto/create-alamat.dto';
 import { Alamat } from './entities/alamat.entity';
 import { Kelurahan } from './entities/kelurahan.entity';
 import { CartService } from 'src/cart/cart.service';
 import { string } from 'joi';
+import { hashPassword } from 'src/helper/hash_password';
+import { Provinsi } from './entities/provinsi.entity';
+import { Kota } from './entities/kota.entity';
+import { Kecamatan } from './entities/kecamatan.entity';
 
 @Injectable()
 export class UsersService {
@@ -20,30 +24,57 @@ export class UsersService {
     private alamatRepository: Repository<Alamat>,
     @InjectRepository(Kelurahan)
     private kelurahanRepository: Repository<Kelurahan>,
-    private cartService: CartService
+    @InjectRepository(Provinsi)
+    private provinsiRepository: Repository<Provinsi>,
+    @InjectRepository(Kota)
+    private kotaRepository: Repository<Kota>,
+    @InjectRepository(Kecamatan)
+    private kecamatanRepository: Repository<Kecamatan>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
-    const result = await this.usersRepository.insert(createUserDto);
-    const data = await this.usersRepository.findOneOrFail({
-      where: {
-        id_user: result.identifiers[0].id_user,
-      }, relations: ['kelurahan', 'kelurahan.kecamatan', 'kelurahan.kota', 'kelurahan.provinsi' ]
-    });
-   
-    return data
+  async findProvinsi(){
+    return await this.provinsiRepository.findAndCount()
   }
-  async createAlamat(createAlamatDto: CreateAlamatDto) {
 
-    const user = await this.usersRepository.findOneOrFail({where: { id_user: createAlamatDto.id_user}})
+  async findKota(id_provinsi: number){
+    return await this.provinsiRepository.find({
+      where:{
+        id_provinsi: id_provinsi
+      }, relations : ['kota']
+    })
+  }
+
+  async findKecamatan(id_kota: number){
+    return await this.kotaRepository.find({
+      where:{
+        id_kota: id_kota
+      },
+      relations: ['kecamatan']
+    })
+  }
+
+  async findKelurahan(id_kecamatan: number){
+    return await this.kecamatanRepository.find({
+      where:{
+        id_kecamatan: id_kecamatan
+      },
+      relations: ['kelurahan']
+    })
+  }
+  
+  async createAlamat(createAlamatDto: CreateAlamatDto) {
+    const user = await this.usersRepository.findOneOrFail({
+      where: { 
+        id_user: createAlamatDto.id_user
+      },
+    })
     const alamat =  new Alamat()
-    // alamat.kelurahan = await this.kelurahanRepository.findOneOrFail({ where : {id_kelurahan: createAlamatDto.id_kelurahan}})
+    alamat.kelurahan = await this.kelurahanRepository.findOneOrFail({ where : {id_kelurahan: createAlamatDto.id_kelurahan}})
     alamat.alamat = createAlamatDto.alamat
     alamat.user = user
     alamat.longtitude = createAlamatDto.longtitude
     alamat.latitude = createAlamatDto.latitude
     const result = await this.alamatRepository.save(alamat);
-
     return this.alamatRepository.findOneOrFail({
       where: {
         id_alamat_user: result.id_alamat_user,
@@ -81,17 +112,16 @@ export class UsersService {
       }
     }
   }
+
   async findAlamat(id_user: string) {
     try {
       const data = await this.usersRepository.findOneOrFail({
         where: {
           id_user,
         },
-        relations : {
-          alamat:true
-        }
+        relations : ['alamat', 'alamat.kelurahan.kecamatan.kota.provinsi']
     });
-    return data.alamat
+    return data
     } catch (e) {
       if (e instanceof EntityNotFoundError) {
         throw new HttpException(
@@ -127,9 +157,20 @@ export class UsersService {
         throw e;
       }
     } 
-
-    await this.usersRepository.update(id_user, updateUserDto);
-
+    const salt = generateString()
+    const password = await hashPassword(updateUserDto.password, salt)
+    const hasil = await this.usersRepository.findOneOrFail({
+      where: {
+        id_user: id_user
+      }
+    })
+    hasil.nama_lengkap = updateUserDto.nama_lengkap
+    hasil.foto = updateUserDto.foto
+    hasil.email = updateUserDto.email
+    hasil.no_telp = updateUserDto.no_telp
+    hasil.salt = salt
+    hasil.password = password
+    await this.usersRepository.save(hasil);
     return this.usersRepository.findOneOrFail({
       where: {
         id_user,

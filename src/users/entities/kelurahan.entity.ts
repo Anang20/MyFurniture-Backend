@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Alamat } from "./alamat.entity";
 import { Kecamatan } from "./kecamatan.entity";
 
 @Entity()
@@ -27,4 +28,7 @@ export class Kelurahan{
 
     @DeleteDateColumn()
     deleted_at: Date;
+
+    @OneToMany(()=> Alamat, alamat => alamat.kelurahan)
+    alamat: Alamat
 }

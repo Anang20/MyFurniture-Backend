@@ -5,9 +5,11 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileController } from './file.controller';
 import { FileService } from './file.service';
+import { User } from 'src/users/entities/user.entity';
+import { Produk } from 'src/produk/entities/produk.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([]), ConfigModule],
+  imports: [TypeOrmModule.forFeature([User, Produk]), ConfigModule],
   controllers: [FileController],
   providers: [FileService],
 })

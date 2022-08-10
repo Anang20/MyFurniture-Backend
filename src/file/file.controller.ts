@@ -8,6 +8,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Request,
   Res,
   UploadedFile,
@@ -18,6 +19,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { FileService } from './file.service';
 import * as fs from 'fs';
+import { UpdateFotoDto } from './dto/updateFotoUser.dto';
+import { UpdateGambarDto } from './dto/updateGambarProduk.dto';
 
 @Catch(HttpException)
 @Controller('file')
@@ -81,4 +84,25 @@ export class FileController {
       },
     };
   }
+
+  @Put('user/:id_user')
+  async updateFoto(
+    @Param('id_user') id_user: string,
+    @Body() updateFotoDto: UpdateFotoDto
+    ){
+      return {
+        data: await this.fileService.updateFotoUser(id_user, updateFotoDto)
+      }
+  }
+
+  @Put('produk/:id_produk')
+  async updateGambar(
+    @Param('id_produk') id_produk: string,
+    @Body() updateGambarDto: UpdateGambarDto
+    ){
+      return {
+        data: await this.fileService.updateFotoProduk(id_produk, updateGambarDto)
+      }
+  }
+  
 }

@@ -9,12 +9,12 @@ export class cartDetail {
     id_cart_detail: string
 
     @ManyToOne(() => Cart, (cart) => cart.detail, {
-        onDelete: 'SET NULL'
+        onDelete: 'CASCADE'
     })
     @JoinTable()
     cart: Cart
 
-    @OneToOne(() => Produk, (produk)=> produk.detail)
+    @OneToOne(() => Produk, (produk)=> produk.detail, {onDelete: 'CASCADE'})
     @JoinColumn()
     produk:Produk
 
@@ -25,6 +25,8 @@ export class cartDetail {
     @Column()
     harga_total: number
 
+    @Column()
+    status: string
     @CreateDateColumn()
     created_at: Date;
 

@@ -21,6 +21,4 @@ export class managementOngkir {
     @DeleteDateColumn()
     deleted_at: Date
 
-    @OneToOne(()=> Order, (order) => order.ongkir)
-    order: Order
 }

@@ -14,7 +14,7 @@ export class Order {
     @JoinColumn()
     cart: Cart
     
-    @OneToOne(()=> managementOngkir, (ongkir) => ongkir.order)
+    @OneToOne(()=> managementOngkir)
     @JoinColumn()
     ongkir: managementOngkir
 
@@ -29,10 +29,7 @@ export class Order {
 
     @Column()
     total_order: number;
-
-    @Column()
-    status: string;
-
+    
     @CreateDateColumn()
     created_at: Date
 
