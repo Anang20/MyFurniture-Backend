@@ -38,9 +38,10 @@ export class ProdukController {
           message: 'success',
         };
       }
+      
   // Mencari produk
   @Get('/search/produk')
-  async findProduct(
+  async findProduk(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number = 5,
     @Query('search') search: string,
@@ -62,12 +63,6 @@ export class ProdukController {
       message: 'success',
     };
   }
-
-  @Get(':imgpath')
-  seeUploadedFile(@Param('imgpath') gambar, @Res() res) {
-    return res.sendFile(gambar, { root: './public/img/produk' });
-  }
-
 
   // mengedit produk
   @UseGuards(AuthGuard('jwt'))
