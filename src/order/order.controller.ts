@@ -65,4 +65,9 @@ export class OrderController {
             data: await this.orderService.terima(id_order)
         }
     }
+
+    @Get('export/:pdf')
+    async export(@Param('pdf') pdf: string){
+        return await this.orderService.export(pdf)
+    }
 }

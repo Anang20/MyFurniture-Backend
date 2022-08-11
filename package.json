@@ -33,6 +33,7 @@
     "@nestjs/swagger": "^5.2.1",
     "@nestjs/terminus": "^8.0.8",
     "@nestjs/typeorm": "^8.1.4",
+    "@t00nday/nestjs-pdf": "^3.0.5",
     "@types/passport-jwt": "^3.0.6",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",

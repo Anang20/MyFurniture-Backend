@@ -11,6 +11,7 @@ import { managementOngkir } from './entities/management-ongkir.entity';
 import { Order } from './entities/order.entity';
 import { Produk } from 'src/produk/entities/produk.entity';
 import { Role } from 'src/users/entities/role.entity';
+import { exportPdf } from 'src/helper/toPdf';
 
 @Injectable()
 export class OrderService {
@@ -196,5 +197,8 @@ export class OrderService {
                 id_order: order.id_order
             }
         })
+    }
+    async export(pdf:string){
+        await exportPdf(pdf)
     }
 }
