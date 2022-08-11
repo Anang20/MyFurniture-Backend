@@ -51,9 +51,14 @@ export class PaymentService {
       const payment = await this.paymentRepository.findOneOrFail({
         where: {
           id_payment: id_payment
+        },relations: {
+          order: true
         }
       })
       payment.status = 'diterima'
+      const order = payment.order
+      order.status = 'sudah bayar'
+      await this.orderRepository.save(order)
       await this.paymentRepository.save(payment)
       return await this.paymentRepository.findOneOrFail({
         where:{

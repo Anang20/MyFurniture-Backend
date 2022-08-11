@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, HttpException, HttpStatus, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/createPayment.dto';
 import { PaymentService } from './payment.service';
 
@@ -7,7 +7,7 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post()
-  async createPayment(createPaymentDto: CreatePaymentDto) {
+  async createPayment(@Body() createPaymentDto: CreatePaymentDto) {
     return {
       data: await this.paymentService.createPayment(createPaymentDto),
       statusCode: HttpStatus.CREATED,

@@ -1,20 +1,17 @@
-import { IsNotEmpty } from 'class-validator';
-import { Column } from 'typeorm';
+import { IsNotEmpty, IsNumber, IsNumberString, max, Max, MaxLength, Min, MinLength } from 'class-validator';
 
 export class CreatePaymentDto {
   @IsNotEmpty()
-  @Column()
   nama_bank: string;
 
   @IsNotEmpty()
-  @Column()
-  no_rek: number;
+  @IsNumberString()
+  @MaxLength(16)
+  no_rek: string;
 
   @IsNotEmpty()
-  @Column()
   gambar: string
 
   @IsNotEmpty()
-  @Column()
   id_order: string
 }

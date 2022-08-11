@@ -45,4 +45,24 @@ export class OrderController {
             massage : "success"
         }
     }
+    @Get(':id_user')
+    async findOne(@Param('id_user', ParseUUIDPipe) id_user : string){
+        return {
+            data: await this.orderService.findOne(id_user)
+        }
+    }
+
+    @Get()
+    async findAll(){
+        return {
+            data: await this.orderService.findAll()
+        }
+    }
+
+    @Put('terima/:id_order')
+    async terima(@Param('id_order', ParseUUIDPipe) id_order: string){
+        return {
+            data: await this.orderService.terima(id_order)
+        }
+    }
 }

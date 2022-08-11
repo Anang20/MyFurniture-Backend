@@ -15,11 +15,9 @@ export class Payment {
     @Column()
     nama_bank: string
 
-    @IsNotEmpty()
     @Column()
-    no_rek: number
+    no_rek: string
 
-    @IsNotEmpty()
     @Column()
     gambar_bukti: string;
 

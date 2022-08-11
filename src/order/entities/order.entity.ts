@@ -18,7 +18,7 @@ export class Order {
     @JoinColumn()
     ongkir: managementOngkir
 
-    @OneToOne(()=> Payment, (payment) => payment.order)
+    @OneToOne(()=> Payment, (payment) => payment.order, {onDelete: 'CASCADE'})
     payment: Payment
 
     @Column()

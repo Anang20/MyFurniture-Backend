@@ -164,4 +164,37 @@ export class OrderService {
        const hasil =  distance(latAdmin, longAdmin, latUser, longUser, harga_kirim)
        return hasil
     }
+
+    async findOne(id_user : string){
+        const user = await this.userRepository.findOneOrFail({
+            where:{
+                id_user : id_user
+            }, relations: {
+                cart: {
+                    order: true
+                }
+            }
+        })
+        const order = user.cart.order
+        return order
+    }
+
+    async findAll(){
+        return await this.orderRepository.findAndCount()
+    }
+
+    async terima(id_order: string){
+        const order = await this.orderRepository.findOneOrFail({
+            where: {
+                id_order: id_order
+            }
+        })
+        order.status = 'telah dikirim'
+        await this.orderRepository.save(order)
+        return this.orderRepository.findOneOrFail({
+            where: {
+                id_order: order.id_order
+            }
+        })
+    }
 }

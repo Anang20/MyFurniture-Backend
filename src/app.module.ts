@@ -13,6 +13,7 @@ import { OrderModule } from './order/order.module';
 import { FileModule } from './file/file.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { RequestModule } from './request/request.module';
+import { HistoryModule } from './history/history.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -89,6 +90,7 @@ import configuration from './config/configuration';
     FileModule,
     DashboardModule,
     RequestModule,
+    HistoryModule,
   ],
 })
 export class AppModule {}
