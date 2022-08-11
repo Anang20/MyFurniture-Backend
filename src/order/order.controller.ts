@@ -9,7 +9,7 @@ export class OrderController {
         private readonly orderService : OrderService
     ){}
 
-    @Put('ongkir')
+    @Post('buatOngkir')
     async updateOngkir(@Body() updateOngkirDto : UpdateOngkirDto){
         return {
             data: await this.orderService.updateOngkir(updateOngkirDto),
@@ -29,7 +29,7 @@ export class OrderController {
         }
     }
 
-    @Get('/total_ongkir/:id_cart')
+    @Get('/total_hrg_produk/:id_cart')
     async totalHargaProduk(@Param('id_cart', ParseUUIDPipe) id_cart: string){
         return {
             data : await this.orderService.totalHargaProduk(id_cart),
@@ -37,7 +37,7 @@ export class OrderController {
         }
     }
 
-    @Get()
+    @Post('buatOrder')
     async createOrder(@Body() createOrder : CreateOrderDto){
         return {
             data : await this.orderService.createOrder(createOrder),
@@ -45,6 +45,4 @@ export class OrderController {
             massage : "success"
         }
     }
-    
-
 }

@@ -86,12 +86,30 @@ export class OrderService {
                 id_alamat_user : createOrder.id_alamat
             }
         })
+        const ongkir = await this.ongkirRepository.findOne({
+            where: {
+                id_harga_kirim: 1
+            }
+        })
+        const cart = await this.cartRepository.findOneOrFail({
+            where: {
+                id_cart: createOrder.id_cart
+            }
+        })
         const order = new Order()
         order.alamat = alamat
+        order.cart = cart
         order.total_hrg_brg = createOrder.total_hrg_brg
         order.total_hrg_krm = createOrder.total_hrg_krm
         order.total_order = createOrder.total_order
-        await this.orderRepository.insert(order)    
+        order.ongkir = ongkir
+        order.status = 'belum bayar'
+        await this.orderRepository.insert(order)  
+        return await this.orderRepository.findOneOrFail({
+            where: {
+                id_order : order.id_order
+            }
+        })  
     }
 
     async createOngkirTotal(id_alamat_user: string){
@@ -144,8 +162,6 @@ export class OrderService {
             }
         }
        const hasil =  distance(latAdmin, longAdmin, latUser, longUser, harga_kirim)
-       console.log(hasil);
-       
        return hasil
     }
 }

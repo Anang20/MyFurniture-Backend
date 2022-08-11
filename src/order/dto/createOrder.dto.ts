@@ -1,21 +1,19 @@
+import { IsNotEmpty } from "class-validator";
 import { Column } from "typeorm";
 
 export class CreateOrderDto{
-    @Column()
+    @IsNotEmpty()
     id_cart: string
 
-    @Column()
+    @IsNotEmpty()
     id_alamat: string
     
-    @Column()
-    id_harga_kirim: string
-
-    @Column()
+    @IsNotEmpty()
     total_hrg_brg: number;
 
-    @Column()
+    @IsNotEmpty()
     total_hrg_krm: number;
 
-    @Column()
+    @IsNotEmpty()
     total_order: number;
 }
