@@ -24,8 +24,12 @@ export class HistoryService {
         const user =  await this.userRepository.find({
             relations: {
                 cart: {
-                    order:true
-                }
+                    order:true,
+                    detail:{
+                        produk:true
+                    }
+                },
+                alamat: true,   
             }, where: {
                 id_user: id_user,
                 cart: {
@@ -35,7 +39,15 @@ export class HistoryService {
                 }
             }
         })
-        return user[0].cart.order
+        const produk = user[0].cart.detail
+        const alamat = user[0].alamat
+        const order = user[0].cart.order
+        return {
+            produk: produk,
+            order: order,
+            alamat: alamat
+        }
+        
     }
 
 }

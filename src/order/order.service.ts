@@ -11,7 +11,7 @@ import { managementOngkir } from './entities/management-ongkir.entity';
 import { Order } from './entities/order.entity';
 import { Produk } from 'src/produk/entities/produk.entity';
 import { Role } from 'src/users/entities/role.entity';
-import { exportPdf } from 'src/helper/toPdf';
+import { generateExcel } from 'src/helper/export_excel';
 
 @Injectable()
 export class OrderService {
@@ -26,12 +26,8 @@ export class OrderService {
         private alamatRepository : Repository<Alamat>,
         @InjectRepository(Cart)
         private cartRepository: Repository<Cart>,
-        @InjectRepository(cartDetail)
-        private cartDetailRepository: Repository<cartDetail>,
         @InjectRepository(User)
         private userRepository: Repository<User>,
-        @InjectRepository(Produk)
-        private produkRepository: Repository<Produk>,
     ){}
 
     // Untuk Admin
@@ -67,14 +63,10 @@ export class OrderService {
         })
         const detail= []
         detail[0]= Cart[0].detail
-        let ongkir = []
         const harga: number[] = []
         detail[0].map(async (i) => {    
            await harga.push(i.harga_total)
         })     
-        ongkir.map(async (item) =>{
-            harga.push(item)
-        })
         const totalHarga = harga.reduce((a, b) => {
             return a + b
         })
@@ -198,7 +190,45 @@ export class OrderService {
             }
         })
     }
-    async export(pdf:string){
-        await exportPdf(pdf)
+    async exportExcel(){
+        const order = await this.orderRepository.find({
+        relations:{
+                cart: {
+                    detail:{
+                        produk: true
+                    },
+                    user: true
+                }
+            }, where: {
+                status: 'telah dikirim'
+            }
+        })
+        const detail = []
+        // console.log(order[0].cart.detail[0]);
+        
+        detail[0] = order[0].cart.detail
+        const Tanggal = order[0].cart.created_at
+        const Nama = order[0].cart.user.nama_lengkap
+        const harga_kirim = order[0].total_hrg_krm
+        const harga_total = order[0].total_order
+        const data = []
+        detail[0].map(async (i) =>{
+            console.log(i, 'ini i');
+            
+            await data.push([
+                Tanggal,
+                Nama,
+                i.produk.nama_produk,
+                i.kuantiti,
+                i.produk.harga,
+                harga_kirim,
+                harga_total,
+            ])
+        })
+        console.log(data, 'Ini data');
+        
+        const excel = await generateExcel(data, 'Hit-Log-Api')
+        console.log(excel, 'ini excel');
+        return excel
     }
 }

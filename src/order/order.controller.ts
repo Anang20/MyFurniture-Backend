@@ -66,8 +66,8 @@ export class OrderController {
         }
     }
 
-    @Get('export/:pdf')
-    async export(@Param('pdf') pdf: string){
-        return await this.orderService.export(pdf)
+    @Get('excel/generator')
+    async exportExcel(){
+        return this.orderService.exportExcel()
     }
 }

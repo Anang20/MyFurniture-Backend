@@ -14,7 +14,7 @@ export class cartDetail {
     @JoinTable()
     cart: Cart
 
-    @OneToOne(() => Produk, (produk)=> produk.detail, {onDelete: 'CASCADE'})
+    @OneToOne(() => Produk, (produk)=> produk.detail, {onDelete: 'CASCADE', eager: true})
     @JoinColumn()
     produk:Produk
 
