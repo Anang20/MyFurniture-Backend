@@ -23,7 +23,7 @@ export class OrderController {
         @Param('id_alamat_user', ParseUUIDPipe) id_alamat_user:string,
     ){
         return {
-            Data: await this.orderService.createOngkirTotal(id_alamat_user),
+            data: await this.orderService.createOngkirTotal(id_alamat_user),
             statusCode: HttpStatus.CREATED,
             massage : 'success'
         }
@@ -37,7 +37,7 @@ export class OrderController {
         }
     }
 
-    @Post('buatOrder')
+    @Post('buat/Order')
     async createOrder(@Body() createOrder : CreateOrderDto){
         return {
             data : await this.orderService.createOrder(createOrder),
@@ -46,9 +46,14 @@ export class OrderController {
         }
     }
     @Get(':id_user')
-    async findOne(@Param('id_user', ParseUUIDPipe) id_user : string){
-        return {
-            data: await this.orderService.findOne(id_user)
+    async findOneOrder(@Param('id_user', ParseUUIDPipe) id_user : string){
+        return await this.orderService.findOneOrder(id_user)
+    }
+
+    @Get('cart/:id_user')
+    async findOneCart(@Param('id_user', ParseUUIDPipe) id_user:string){
+        return{
+            data: await this.orderService.findOneCart(id_user)
         }
     }
 
@@ -59,10 +64,10 @@ export class OrderController {
         }
     }
 
-    @Put('terima/:id_order')
-    async terima(@Param('id_order', ParseUUIDPipe) id_order: string){
+    @Put('terima/:id_user')
+    async terima(@Param('id_user', ParseUUIDPipe) id_user: string){
         return {
-            data: await this.orderService.terima(id_order)
+            data: await this.orderService.terima(id_user)
         }
     }
 

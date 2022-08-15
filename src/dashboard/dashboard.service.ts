@@ -46,4 +46,17 @@ export class DashboardService {
         return hasil
     }
 
+    async findCustomer(){
+        const role = await this.roleRepository.find({
+            relations: {
+                user: true
+            }, where:{
+                role_name: 'customer'
+            }
+        })
+        const user = role[0].user
+        console.log(user);
+        return user
+    }
+
 }

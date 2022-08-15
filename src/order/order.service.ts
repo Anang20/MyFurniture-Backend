@@ -179,7 +179,7 @@ export class OrderService {
        return hasil
     }
 
-    async findOne(id_user : string){
+    async findOneOrder(id_user : string){
         const user = await this.userRepository.findOneOrFail({
             where:{
                 id_user : id_user
@@ -191,6 +191,29 @@ export class OrderService {
         })
         const order = user.cart.order
         return order
+    }
+
+    async findOneCart(id_user: string){
+        const user = await this.userRepository.find({
+            where: {
+                id_user,
+                cart:{
+                    detail: {
+                        status: 'dipilih'
+                    }
+                }
+            }, relations:{
+                cart:{
+                    detail: true
+                }
+            }
+        })
+        console.log(user);
+        
+        return {
+            detail: user[0].cart.detail,
+            id_cart: user[0].cart.id_cart
+        }
     }
 
     async findAll(){
@@ -233,7 +256,7 @@ export class OrderService {
         const harga_kirim = order[0].total_hrg_krm
         const harga_total = order[0].total_order
         const data = []
-        detail[0].map(async (i) =>{
+        detail[0].map(async (i, index) =>{
             console.log(i, 'ini i');
             
             await data.push([

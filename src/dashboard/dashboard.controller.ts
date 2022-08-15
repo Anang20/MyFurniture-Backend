@@ -16,4 +16,11 @@ export class DashboardController {
         }
     }
 
+    @Get('user/')
+    async findCustomer(){
+        return {
+            data: await this.dashboardService.findCustomer()
+        }
+    }
+
 }

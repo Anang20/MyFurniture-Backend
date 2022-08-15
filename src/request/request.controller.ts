@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { CreateRequestDto } from './dto/createRequest.dto';
 import { RequestService } from './request.service';
 
@@ -8,10 +8,12 @@ export class RequestController {
         private readonly requestService: RequestService
     ){}
 
-    @Post()
-    async createRequest(@Body() createRequestDto: CreateRequestDto){
+    @Post(':id_user')
+    async createRequest(
+        @Param('id_user', ParseUUIDPipe) id_user: string,
+        @Body() createRequestDto: CreateRequestDto){
         return{
-            data: this.requestService.createRequest(createRequestDto),
+            data: await this.requestService.createRequest(id_user, createRequestDto),
             statusCode: HttpStatus.CREATED,
             message: 'success',
         }
@@ -20,7 +22,7 @@ export class RequestController {
     @Get()
     async findAll(){
         return{
-            data: this.requestService.findAll(),
+            data: await this.requestService.findAll(),
             statusCode: HttpStatus.OK,
             message: 'success',
         }

@@ -39,8 +39,29 @@ export class ProdukService {
     return paginate<Produk>(query, options);
   }
 
-  findAll() {
-    return this.produkRepository.findAndCount();
+  async findAll() {
+    const produk = await this.produkRepository.find()
+    const proses = produk
+    const data = []
+    proses.map(async (value, i)=>{
+      const formatter = new Intl.NumberFormat('en-ID', {
+        style: 'currency',
+        currency: 'IDR'
+      }).format(value.harga)
+      .replace(/[IDR]/gi, '')
+      .replace(/(\.+\d{2})/, '')
+      .trimLeft()
+      let no = i + 1
+      data.push({
+        No: no,
+        nama_produk: value.nama_produk,
+        gambar: value.gambar,
+        harga: `Rp. ${formatter}`,
+        deskripsi: value.deskripsi,
+        stok: value.stok,
+      })
+    })
+    return data
   }
 
   async findOne(id_produk: string) {

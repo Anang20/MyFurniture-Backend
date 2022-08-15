@@ -63,6 +63,6 @@ export class User {
   @OneToOne(() => Cart, (cart)=> cart.user)
   cart : Cart
 
-  @OneToOne(() => Request, request => request.user)
+  @OneToMany(() => Request, request => request.user)
   request: Request
 }

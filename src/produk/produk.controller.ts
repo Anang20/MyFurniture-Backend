@@ -127,4 +127,11 @@ export class ProdukController {
     }
     return data;
   }
+
+  @Get('get/all')
+  async findAll(){
+    return {
+      data: await this.produkService.findAll()
+    }
+  }
 }

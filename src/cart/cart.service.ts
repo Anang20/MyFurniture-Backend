@@ -73,6 +73,8 @@ export class CartService {
             }
           }
         })
+        console.log(user);
+        
         const cart = user.cart
         return cart
       }
