@@ -97,7 +97,7 @@ async function setDataHitLogApi(dataHitLogApi) {
       sum += i;
       const filterElement = [];
       filterElement['No'] = sum;
-      filterElement['Tanggal'] = element[0];
+      filterElement['Tanggal'] = element[0].toString();
       filterElement['Nama'] = element[1];
       filterElement['Produk'] = element[2];
       filterElement['Kuantiti'] = element[3];

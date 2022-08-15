@@ -92,8 +92,8 @@ export function excelInserter({ filename, sheets }: ExcelInserterParams) {
 
         if (typeof cellContent === 'string') {
           if (/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/.test(cellContent)) {
-            const [year, month, day] = cellContent.split('/');
-            const date = parseISO(`${year}-${month}-${day}T00:00:00Z`);
+            const [day, month, year] = cellContent.split('/');
+            const date = parseISO(`${day}-${month}-${year}T00:00:00Z`);
         
             ws.cell(currentRow, index + 1).date(date);
           } else {
