@@ -70,4 +70,13 @@ export class OrderController {
     async exportExcel(){
         return this.orderService.exportExcel()
     }
+
+    @Get('produk/:id_cart')
+    async findCart(
+        @Param('id_cart', ParseUUIDPipe) id_cart:string
+    ){
+        return {
+            data: await this.orderService.findCart(id_cart)
+        }
+    }
 }

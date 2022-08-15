@@ -15,7 +15,9 @@ export class CartService {
     private cartDetailRepository : Repository<cartDetail>,
     private produkService : ProdukService,
     @InjectRepository(Cart)
-    private cartRepository : Repository<Cart>
+    private cartRepository : Repository<Cart>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>
     ){}
 
     async createCart(user: User){
@@ -46,6 +48,33 @@ export class CartService {
             id_cart_detail: result.id_cart_detail,
           }
         });
+      }
+
+      async findOneDetail(id_user: string){
+        const user = await this.userRepository.findOneOrFail({
+          where:{
+            id_user
+          }, relations:{
+            cart: {
+              detail: true
+            }
+          }
+        })
+        const cart = user.cart.detail
+        return cart
+      }
+      async findOneCart(id_user: string){
+        const user = await this.userRepository.findOneOrFail({
+          where:{
+            id_user
+          }, relations:{
+            cart: {
+              detail: true
+            }
+          }
+        })
+        const cart = user.cart
+        return cart
       }
 
       async remove(id_cart_detail:string){
@@ -117,7 +146,7 @@ export class CartService {
       });
     }
 
-   async findAll(id_cart : string){
+   async findOne(id_cart : string){
       try {
         const hasil = await this.cartRepository.findOneOrFail({
           where : {

@@ -12,6 +12,7 @@ import { Order } from './entities/order.entity';
 import { Produk } from 'src/produk/entities/produk.entity';
 import { Role } from 'src/users/entities/role.entity';
 import { generateExcel } from 'src/helper/export_excel';
+// import { generateExcel } from 'src/helper/export_excel';
 
 @Injectable()
 export class OrderService {
@@ -71,6 +72,26 @@ export class OrderService {
             return a + b
         })
         return totalHarga
+    }
+
+    async findCart(id_cart: string){
+        const Cart = await this.cartRepository.find({
+            relations:{
+                detail:true
+            },
+            where : {
+                id_cart : id_cart,
+                detail:{
+                    status: 'dipilih'
+                }
+            }, 
+        })
+        console.log(Cart, 'ini cart');
+        
+        const produk = Cart[0].detail
+        console.log(produk, 'ini produk');
+        
+        return produk
     }
 
     async createOrder(createOrder : CreateOrderDto){
