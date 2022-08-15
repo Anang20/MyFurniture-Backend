@@ -66,35 +66,22 @@ export class ProdukService {
   }
 
   
-  async update(req, id_produk: string, updateUserDto: UpdateProdukDto, gambar) {
-    try {
-      await this.produkRepository.findOneOrFail({
-        where: {
-          id_produk,
-        },
-      });
-    } catch (e) {
-      if (e instanceof EntityNotFoundError) {
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.NOT_FOUND,
-            error: 'Data not found',
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      } else {
-        throw e;
+  async update( req, id_produk: string, updateProdukDto: UpdateProdukDto, gambar) {
+    const produk = await this.produkRepository.findOneOrFail({
+      where:{
+        id_produk
       }
-    }
+    })
 
-    await this.produkRepository.update(id_produk, {
-      ...updateUserDto,
-      gambar,
-    });
-
+    produk.gambar = updateProdukDto.gambar
+    produk.deskripsi = updateProdukDto.deskripsi
+    produk.harga = updateProdukDto.harga
+    produk.stok= updateProdukDto.stok
+    produk.nama_produk = updateProdukDto.nama_produk
+    await this.produkRepository.save(produk)
     return this.produkRepository.findOneOrFail({
       where: {
-        id_produk,
+        id_produk: produk.id_produk
       },
     });
   }

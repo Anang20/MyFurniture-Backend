@@ -115,13 +115,20 @@ export class UsersService {
 
   async findAlamat(id_user: string) {
     try {
-      const data = await this.usersRepository.findOneOrFail({
+      const user = await this.usersRepository.findOneOrFail({
         where: {
           id_user,
         },
-        relations : ['alamat', 'alamat.kelurahan.kecamatan.kota.provinsi']
+        relations : ['alamat']
     });
-    return data
+    const nama_lengkap = user.nama_lengkap
+    const no_telp = user.no_telp
+    const alamat = user.alamat
+    return {
+      nama_lengkap: nama_lengkap,
+      no_telp: no_telp,
+      alamat: alamat
+    }
     } catch (e) {
       if (e instanceof EntityNotFoundError) {
         throw new HttpException(
@@ -223,5 +230,29 @@ export class UsersService {
     }
 
     await this.usersRepository.delete(id_user);
+  }
+  
+  async removeAlamat(id_alamat:string){
+    try {
+     const alamat = await this.alamatRepository.findOneOrFail({
+        where: {
+          id_alamat_user:id_alamat,
+        },
+      });
+    } catch (e) {
+      if (e instanceof EntityNotFoundError) {
+        throw new HttpException(
+          {
+            statusCode: HttpStatus.NOT_FOUND,
+            error: 'Data not found',
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      } else {
+        throw e;
+      }
+    }
+
+    await this.alamatRepository.delete(id_alamat);
   }
 }

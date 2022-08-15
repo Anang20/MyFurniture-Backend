@@ -36,7 +36,7 @@ export class UsersController {
   }
 
   @Get('cari_alamat/:id_user')
-  async findAllAlamat(@Param('id_user', ParseUUIDPipe) id_user: string) {
+  async findAlamat(@Param('id_user', ParseUUIDPipe) id_user: string) {
     return {
       data: await this.usersService.findAlamat(id_user),
       statusCode: HttpStatus.OK,
@@ -111,10 +111,10 @@ export class UsersController {
       message: 'success',
     };
   }
-  @Get('carialamat/:id_user')
-  async findAlamat(@Param('id_user', ParseUUIDPipe) id_user: string) {
+  @Delete('alamat/:id_alamat')
+  async removeAlamat(@Param('id_alamat', ParseUUIDPipe) id_alamat: string) {
+    await this.usersService.removeAlamat(id_alamat);
     return {
-      data: await this.usersService.findAlamat(id_user),
       statusCode: HttpStatus.OK,
       message: 'success',
     };
