@@ -95,7 +95,7 @@ export class OrderService {
     }
 
     async createOrder(createOrder : CreateOrderDto){
-        const alamat = await this.alamatRepository.find({
+        const alamat = await this.alamatRepository.findOneOrFail({
             where: {
                 id_alamat_user : createOrder.id_alamat
             }
@@ -110,6 +110,8 @@ export class OrderService {
                 id_cart: createOrder.id_cart
             }
         })
+        console.log(cart);
+        
         const order = new Order()
         order.alamat = alamat
         order.cart = cart
@@ -217,7 +219,13 @@ export class OrderService {
     }
 
     async findAll(){
-        return await this.orderRepository.findAndCount()
+        const order = await this.orderRepository.find({
+            where:{
+                status:'sudah bayar'
+            }
+        })
+        console.log(order[0],'ini order');
+
     }
 
     async terima(id_order: string){

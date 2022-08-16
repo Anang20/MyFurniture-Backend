@@ -1,6 +1,6 @@
 import { cartDetail } from "src/cart/entities/cart-detail.entity";
 import { Cart } from "src/cart/entities/cart.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { managementOngkir } from "./management-ongkir.entity";
 import { Payment } from "../../payment/entities/payment.entity";
 import { Alamat } from "src/users/entities/alamat.entity";
@@ -10,11 +10,11 @@ export class Order {
     @PrimaryGeneratedColumn('uuid')
     id_order: string;
 
-    @OneToOne(()=> Cart, (cart) => cart.order)
+    @ManyToOne(()=> Cart, (cart) => cart.order)
     @JoinColumn()
     cart: Cart
     
-    @OneToOne(()=> managementOngkir)
+    @ManyToOne(()=> managementOngkir)
     @JoinColumn()
     ongkir: managementOngkir
 
@@ -47,5 +47,5 @@ export class Order {
 
     @OneToOne(()=> Alamat, alamat => alamat.order)
     @JoinColumn()
-    alamat: Alamat[]
+    alamat: Alamat
 }

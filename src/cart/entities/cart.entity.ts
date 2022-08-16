@@ -34,6 +34,6 @@ export class Cart {
     @DeleteDateColumn()
     deleted_at: Date;
 
-    @OneToOne(()=> Order, (order)=> order.cart)
+    @OneToMany(()=> Order, (order)=> order.cart)
     order: Order
 }

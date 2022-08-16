@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Order } from "./order.entity";
 
 @Entity()
@@ -21,4 +21,6 @@ export class managementOngkir {
     @DeleteDateColumn()
     deleted_at: Date
 
+    @OneToMany(() => Order, order => order.ongkir)
+    order:Order
 }
