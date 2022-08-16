@@ -37,7 +37,7 @@ export class OrderController {
         }
     }
 
-    @Post('buat/Order')
+    @Post('/buat/order')
     async createOrder(@Body() createOrder : CreateOrderDto){
         return {
             data : await this.orderService.createOrder(createOrder),

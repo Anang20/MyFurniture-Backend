@@ -10,8 +10,8 @@ export class CartController {
 
     @Post(':id_produk/:id_cart')
     async createCartDetail(
-        @Param('id_cart', ParseUUIDPipe ) id_cart: string,
         @Param('id_produk', ParseUUIDPipe ) id_produk: string,
+        @Param('id_cart', ParseUUIDPipe ) id_cart: string,
         @Body() createCartDetailDto : CreateCartDetailDto
         ) {
         return {
