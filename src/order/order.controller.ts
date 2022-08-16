@@ -1,41 +1,49 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Res,
+} from '@nestjs/common';
 import { UpdateOngkirDto } from './dto/updateOngkir.dto';
 import { CreateOrderDto } from './dto/createOrder.dto';
 import { OrderService } from './order.service';
 
 @Controller('order')
 export class OrderController {
-    constructor(
-        private readonly orderService : OrderService
-    ){}
+  constructor(private readonly orderService: OrderService) {}
 
-    @Post('buatOngkir')
-    async updateOngkir(@Body() updateOngkirDto : UpdateOngkirDto){
-        return {
-            data: await this.orderService.updateOngkir(updateOngkirDto),
-            statusCode: HttpStatus.OK,
-            massage : 'success'
-        }
-    }
+  @Post('buatOngkir')
+  async updateOngkir(@Body() updateOngkirDto: UpdateOngkirDto) {
+    return {
+      data: await this.orderService.updateOngkir(updateOngkirDto),
+      statusCode: HttpStatus.OK,
+      massage: 'success',
+    };
+  }
 
-    @Post('ongkir/:id_alamat_user')
-    async createOngkirTotal(
-        @Param('id_alamat_user', ParseUUIDPipe) id_alamat_user:string,
-    ){
-        return {
-            data: await this.orderService.createOngkirTotal(id_alamat_user),
-            statusCode: HttpStatus.CREATED,
-            massage : 'success'
-        }
-    }
+  @Post('ongkir/:id_alamat_user')
+  async createOngkirTotal(
+    @Param('id_alamat_user', ParseUUIDPipe) id_alamat_user: string,
+  ) {
+    return {
+      data: await this.orderService.createOngkirTotal(id_alamat_user),
+      statusCode: HttpStatus.CREATED,
+      massage: 'success',
+    };
+  }
 
-    @Get('/total_hrg_produk/:id_cart')
-    async totalHargaProduk(@Param('id_cart', ParseUUIDPipe) id_cart: string){
-        return {
-            data : await this.orderService.totalHargaProduk(id_cart),
-            statusCode: HttpStatus.OK
-        }
-    }
+  @Get('/total_hrg_produk/:id_cart')
+  async totalHargaProduk(@Param('id_cart', ParseUUIDPipe) id_cart: string) {
+    return {
+      data: await this.orderService.totalHargaProduk(id_cart),
+      statusCode: HttpStatus.OK,
+    };
+  }
 
     @Post('/buat/order')
     async createOrder(@Body() createOrder : CreateOrderDto){
@@ -57,31 +65,45 @@ export class OrderController {
         }
     }
 
-    @Get()
-    async findAll(){
-        return {
-            data: await this.orderService.findAll()
-        }
-    }
+  @Get()
+  async findAll() {
+    return {
+      data: await this.orderService.findAll(),
+    };
+  }
 
-    @Put('terima/:id_user')
-    async terima(@Param('id_user', ParseUUIDPipe) id_user: string){
-        return {
-            data: await this.orderService.terima(id_user)
-        }
-    }
+  @Put('terima/:id_user')
+  async terima(@Param('id_user', ParseUUIDPipe) id_user: string) {
+    return {
+      data: await this.orderService.terima(id_user),
+    };
+  }
 
-    @Get('excel/generator')
-    async exportExcel(){
-        return this.orderService.exportExcel()
-    }
+  @Get('excel/generator')
+  async exportExcel() {
+    try {
+       return await this.orderService.exportExcel(); 
+    } catch (error) {
+        return 'terdapat kesalahan saat membuat excel'
+    }  
+  }
 
-    @Get('produk/:id_cart')
-    async findCart(
-        @Param('id_cart', ParseUUIDPipe) id_cart:string
-    ){
-        return {
-            data: await this.orderService.findCart(id_cart)
-        }
-    }
+  @Get('export/excel-generator')
+  async downloadExcel(@Res() res) {
+    try {
+        return await res.download(
+      `./uploads/export/${await this.exportExcel()}`,
+      'laporan.xlsx',
+    );
+    } catch (error) {
+        return 'ada kesalahan dalam mendowload excel'
+    }  
+  }
+
+  @Get('produk/:id_cart')
+  async findCart(@Param('id_cart', ParseUUIDPipe) id_cart: string) {
+    return {
+      data: await this.orderService.findCart(id_cart),
+    };
+  }
 }
