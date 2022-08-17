@@ -59,6 +59,7 @@ export class ProdukService {
         harga: `Rp. ${formatter}`,
         deskripsi: value.deskripsi,
         stok: value.stok,
+        id: value.id_produk
       })
     })
     return data
