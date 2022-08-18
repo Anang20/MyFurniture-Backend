@@ -19,11 +19,6 @@ export class Cart {
         default: 0
     })
     qty: number
-
-    @Column({
-        default:false
-    })
-    status: boolean
     
     @CreateDateColumn()
     created_at: Date;

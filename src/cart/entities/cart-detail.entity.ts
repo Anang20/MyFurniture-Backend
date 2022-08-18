@@ -25,8 +25,6 @@ export class cartDetail {
     @Column()
     harga_total: number
 
-    @Column()
-    status: string
     @CreateDateColumn()
     created_at: Date;
 

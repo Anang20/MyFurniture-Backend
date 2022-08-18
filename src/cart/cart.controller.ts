@@ -65,14 +65,6 @@ export class CartController {
        return this.cartService.findCart()
     }
 
-    @Put('cek/:id_cart_detail')
-    async ceklist(@Param('id_cart_detail') id_cart_detail: string){
-        return {
-            data: await this.cartService.ceklist(id_cart_detail)
-            
-        }
-    }
-
     @Delete(':id_cart_detail')
     async remove(@Param('id_cart_detail') id_cart_detail: string){
         await this.cartService.remove(id_cart_detail)
