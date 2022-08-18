@@ -101,11 +101,15 @@ export class OrderService {
         id_alamat_user: createOrder.id_alamat,
       },
     });
+    console.log(alamat,'ini aalamt');
+    
     const ongkir = await this.ongkirRepository.findOne({
       where: {
         id_harga_kirim: 1,
       },
     });
+    console.log(ongkir, 'ini');
+    
     const cart = await this.cartRepository.findOneOrFail({
       where: {
         id_cart: createOrder.id_cart,
@@ -121,6 +125,7 @@ export class OrderService {
     order.total_order = createOrder.total_order;
     order.ongkir = ongkir;
     order.status = 'belum bayar';
+    order.nomerOrder = ' '
     await this.orderRepository.insert(order);
     return await this.orderRepository.findOneOrFail({
       where: {
@@ -229,52 +234,46 @@ export class OrderService {
 
   async findAll() {
     const order = await this.orderRepository.find({
-      where: {
-        status: 'sudah bayar',
-      },
-      relations: ['cart.detail.produk','alamat.kelurahan.kecamatan.kota.provinsi',]
+      relations: ['cart.detail.produk','alamat.kelurahan.kecamatan.kota.provinsi', 'cart.user']
   })
-    console.log(order[0].cart);
-    let array = [];
-    for (let i = 0; i < order.length; i++) {
-      console.log(order[i].alamat);
-      console.log(order[i].alamat.kelurahan, 'kotaaaaaaaaaa');
-
-      const data = await {
-        No: i + 1,
-        Tanggal: order[i].created_at,
-        Nama: order[i].cart.user,
-        Produk: order[i].cart.detail[i].produk.nama_produk,
-        Kuantiti: order[i].cart.detail[i].kuantiti,
-        HargaBarang: order[i].cart.detail[i].produk.harga,
-        totalHarga: order[i].cart.detail[i].harga_total,
-        // Alamat: `${order[i].alamat.kelurahan.kecamatan.kota.provinsi.nama_provinsi}, ${order[i].alamat.kelurahan.kecamatan.nama_kecamatan}, ${order[i].alamat.kelurahan.nama_kelurahan}, ${order[i].alamat.alamat}`,
-      };
-      array.push(data);
-    }
-    return array;
-
-    // console.log(data);
-
-    // order.map(async (order[i]) => {
-    // let no = 1 + i
-
-    //   return await data.push({
-    //         // No: no,
-    //         Tanggal: value.created_at,
-    //         Nama: value.cart.user,
-    //         Produk: value.cart.detail.produk.nama_produk,
-    //         Kuantiti: value.cart.detail.kuantiti,
-    //         HargaBarang: value.cart.detail.produk.harga,
-    //         totalHarga: value.cart.detail.harga_total,
-    //         Alamat: `${value.alamat.kelurahan.kecamatan.kota.provinsi.nama_provinsi}, ${value.alamat.kelurahan.kecamatan.nama_kecamatan}, ${value.alamat.kelurahan.nama_kelurahan}, ${value.alamat.alamat}`
-    //   })
-    // })
-    // console.log(data);
-    // return await data
+  const curency = (value)=>{
+    const formatter = new Intl.NumberFormat('en-ID', {
+        style: 'currency',
+        currency: 'IDR'
+      }).format(value)
+      .replace(/[IDR]/gi, '')
+      .replace(/(\.+\d{2})/, '')
+      .trimLeft()
+      return formatter
+}
+    console.log(order)
+    const data =[]
+    order.map(value=>{
+      const data2 = []
+      data2[0] = value.cart.detail
+      if(data2[0].length >=1){
+       data2[0].map((value2, i)=> {          
+          let no = i +1
+       return data.push({
+            No: no,
+            NomerOrder:value.nomerOrder,
+            Tanggal: value.created_at.toDateString(),
+            Nama: value.cart.user.nama_lengkap,
+            Produk: value2.produk.nama_produk,
+            Kuantiti: value2.kuantiti,
+            HargaBarang:`Rp. ${curency(value2.produk.harga)} `,
+            Alamat: `${value.alamat.alamat}, ${value.alamat.kelurahan.nama_kelurahan}, ${value.alamat.kelurahan.kecamatan.nama_kecamatan}, ${value.alamat.kelurahan.kecamatan.kota.nama_kota}, ${value.alamat.kelurahan.kecamatan.kota.provinsi.nama_provinsi}`,
+            status:value.status,
+            id: value.id_order
+        })
+      })
+        console.log(data,'ini data');
+      }
+    })
+    return data
   }
 
-  async terima(id_order: string) {
+  async terima(id_order: number) {
     const order = await this.orderRepository.findOneOrFail({
       where: {
         id_order: id_order,

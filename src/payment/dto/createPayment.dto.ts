@@ -13,5 +13,5 @@ export class CreatePaymentDto {
   gambar: string
 
   @IsNotEmpty()
-  id_order: string
+  id_order: number
 }

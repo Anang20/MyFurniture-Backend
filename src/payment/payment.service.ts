@@ -27,6 +27,15 @@ export class PaymentService {
       hasil.order = order
       hasil.status = 'menunggu'
       await this.paymentRepository.insert(hasil)
+      const year = order.created_at.getFullYear()
+      const month = order.created_at.getMonth()
+      const day = order.created_at.getDay()
+      const getId = (num) => {
+        return num.toString().padStart(6, "0")
+      };
+      const id = `${year}${month}${day}${getId(createPaymentDto.id_order)}`
+      order.nomerOrder = id
+      await this.orderRepository.save(order)
       return await this.paymentRepository.findOneOrFail({
         where: {
           id_payment: hasil.id_payment

@@ -4,11 +4,13 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToO
 import { managementOngkir } from "./management-ongkir.entity";
 import { Payment } from "../../payment/entities/payment.entity";
 import { Alamat } from "src/users/entities/alamat.entity";
+import { isNumberString, IsOptional } from "class-validator";
+import { number } from "joi";
 
 @Entity()
 export class Order {
-    @PrimaryGeneratedColumn('uuid')
-    id_order: string;
+    @PrimaryGeneratedColumn('increment')
+    id_order: number;
 
     @ManyToOne(()=> Cart, (cart) => cart.order)
     @JoinColumn()
@@ -20,6 +22,9 @@ export class Order {
 
     @OneToOne(()=> Payment, (payment) => payment.order, {onDelete: 'CASCADE'})
     payment: Payment
+
+    @Column()
+    nomerOrder: string;
 
     @Column()
     total_hrg_brg: number;
@@ -45,7 +50,7 @@ export class Order {
     @OneToOne(() => cartDetail, (detail)=> detail.produk)
     detail: cartDetail[]
 
-    @OneToOne(()=> Alamat, alamat => alamat.order)
+    @ManyToOne(()=> Alamat, alamat => alamat.order)
     @JoinColumn()
     alamat: Alamat
 }
