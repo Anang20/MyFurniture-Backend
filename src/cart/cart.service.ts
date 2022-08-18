@@ -41,7 +41,6 @@ export class CartService {
         hasil.harga_total = createCartDetailDto.kuantiti * produk.harga
         hasil.produk = produk
         hasil.cart = cart
-        hasil.status = 'tidak-dipilih'
         const result = await this.cartDetailRepository.save(hasil)
         return this.cartDetailRepository.findOneOrFail({
           where: {
@@ -72,9 +71,7 @@ export class CartService {
               detail: true
             }
           }
-        })
-        console.log(user);
-        
+        }) 
         const cart = user.cart
         return cart
       }
@@ -100,21 +97,6 @@ export class CartService {
           }
         }
         await this.cartDetailRepository.delete(id_cart_detail);
-    }
-
-    async ceklist(id_cart_detail:string){
-      const hasil = await this.cartDetailRepository.findOneOrFail({
-        where: {
-          id_cart_detail: id_cart_detail
-        }
-      })
-      hasil.status= 'dipilih'
-      await this.cartDetailRepository.save(hasil)
-      return this.cartDetailRepository.findOneOrFail({
-        where: {
-          id_cart_detail: hasil.id_cart_detail
-        }
-      })
     }
 
     async update(id_cart_detail: string, updateCartDetailDto: UpdateCartDetailDto) {

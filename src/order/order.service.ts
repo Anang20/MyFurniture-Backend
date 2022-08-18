@@ -58,9 +58,6 @@ export class OrderService {
       },
       where: {
         id_cart: id_cart,
-        detail: {
-          status: 'dipilih',
-        },
       },
     });
     const detail = [];
@@ -82,9 +79,6 @@ export class OrderService {
       },
       where: {
         id_cart: id_cart,
-        detail: {
-          status: 'dipilih',
-        },
       },
     });
     console.log(Cart, 'ini cart');
@@ -213,9 +207,7 @@ export class OrderService {
       where: {
         id_user,
         cart: {
-          detail: {
-            status: 'dipilih',
-          },
+          detail: true
         },
       },
       relations: {
@@ -234,7 +226,8 @@ export class OrderService {
 
   async findAll() {
     const order = await this.orderRepository.find({
-      relations: ['cart.detail.produk','alamat.kelurahan.kecamatan.kota.provinsi', 'cart.user']
+      relations: ['cart.detail.produk','alamat.kelurahan.kecamatan.kota.provinsi', 'cart.user'],
+      withDeleted:true
   })
   const curency = (value)=>{
     const formatter = new Intl.NumberFormat('en-ID', {
