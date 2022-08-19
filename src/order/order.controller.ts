@@ -73,7 +73,7 @@ export class OrderController {
   }
 
   @Put('terima/:id_order')
-  async terima(@Param('id_order', ParseUUIDPipe) id_order: number) {
+  async terima(@Param('id_order') id_order: number) {
     return {
       data: await this.orderService.terima(id_order),
     };

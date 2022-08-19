@@ -9,7 +9,7 @@ export class Cart {
     id_cart : string
 
     @OneToMany(() => cartDetail, (cart) => cart.cart)
-    detail: cartDetail
+    detail: cartDetail[]
 
     @OneToOne(() => User, (user) => user.cart, {onDelete: 'CASCADE'})
     @JoinColumn()
@@ -30,5 +30,5 @@ export class Cart {
     deleted_at: Date;
 
     @OneToMany(()=> Order, (order)=> order.cart)
-    order: Order
+    order: Order[]
 }
