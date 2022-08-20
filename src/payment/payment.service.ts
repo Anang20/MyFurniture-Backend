@@ -61,6 +61,7 @@ export class PaymentService {
         let no = i +1
         data.push({
           No: no,
+          NoOrder:value.order.nomerOrder,
           NamaCustomer: value.order.cart.user.nama_lengkap,
           NamaBank: value.nama_bank,
           NoRek: value.no_rek,
