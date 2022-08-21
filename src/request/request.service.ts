@@ -47,6 +47,7 @@ export class RequestService {
              nama_lengkap: value.user.nama_lengkap,
              nama_produk : value.nama_produk,
              kuantiti:value.quantity,   
+             id:value.id_request
         })
         })
         return await data
