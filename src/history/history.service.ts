@@ -23,23 +23,14 @@ export class HistoryService {
 
   async findOne(id_user: string) {
     const user = await this.userRepository.findOneOrFail({
-      relations: {
-        cart: {
-          detail: {
-            produk: true,
-          },
-        },
-      },
+      relations: ['cart.order', 'cart.detail.produk'],
       where: {
         id_user: id_user,
-        cart: {
-          order: {
-            status: 'telah dikirim',
-          },
-        },
       },
       withDeleted: true,
     });
+    console.log(user);
+    
     return user;
   }
 }
