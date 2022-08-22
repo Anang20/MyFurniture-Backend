@@ -78,6 +78,10 @@ export class OrderController {
       data: await this.orderService.terima(id_order),
     };
   }
+  @Get()
+  async cariLaporan(){
+    return await this.orderService.cariLaporan()
+  }
 
   @Get('excel/generator')
   async exportExcel() {

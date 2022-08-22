@@ -311,4 +311,34 @@ export class OrderService {
       return e;
     }
   }
+
+  async cariLaporan() {
+    try {
+      const order = await this.orderRepository.find({
+        relations: ['cart.detail.produk', 'cart.user'],
+        where: {
+          status: 'telah dikirim',
+        },
+      });
+      console.log(order);
+      
+      const data = [];
+      order.map(async (value, i)=>{
+        let no = i+1
+        let Tanggal = value.created_at.toDateString()
+        await data.push({
+          No: no,
+          Tanggal: Tanggal,
+          NoOrder: value.nomerOrder,
+          Nama: value.cart.user.nama_lengkap,
+          totalOrder: value.total_order,
+          status:  value.status
+        })
+      })
+    
+      return data;
+    } catch (e) {
+      return e;
+    }
+  }
 }
