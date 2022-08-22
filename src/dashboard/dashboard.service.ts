@@ -32,7 +32,7 @@ export class DashboardService {
         })
         const payment = await this.paymentRepository.findAndCount({
             where : {
-                status : 'sudah bayar'
+                status : 'diterima'
             }
         }).then((data)=>{
             const [user, number] = data
