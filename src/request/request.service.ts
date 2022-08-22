@@ -54,14 +54,12 @@ export class RequestService {
     }
 
     async remove(id_request:number){
-        const request= await this.requestReporitory.findOneOrFail({
-            where: {
-                id_request: id_request
-            }, relations: {
-                user: true
-            }
-        })
-        await this.requestReporitory.softDelete(request)
+        // const request= await this.requestReporitory.findOne({
+        //     where: {
+        //         id_request: id_request
+        //     }
+        // })
+        await this.requestReporitory.delete(id_request)
     }
 
 }
