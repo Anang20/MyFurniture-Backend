@@ -81,7 +81,7 @@ export class PaymentService {
           id_payment: id_payment
         }
       })
-      await this.paymentRepository.softDelete(payment)
+      await this.paymentRepository.softDelete(id_payment)
     }
 
     async acc(id_payment: string){

@@ -283,35 +283,32 @@ export class OrderService {
   async exportExcel() {
     try {
       const order = await this.orderRepository.find({
-        relations: {
-          cart: true,
-        },
+        relations: ['cart.detail.produk', 'cart.user'],
         where: {
           status: 'telah dikirim',
         },
       });
-      const detail = [];
-      detail[0] = order[0].cart.detail;
-      const Tanggal = order[0].cart.created_at;
-      const Nama = order[0].cart.user.nama_lengkap;
-      const harga_kirim = order[0].total_hrg_krm;
-      const harga_total = order[0].total_order;
+      console.log(order);
+      
       const data = [];
-      detail[0].map(async (i, index) => {
-        await data.push([
-          Tanggal.getDate(),
-          Nama,
-          i.produk.nama_produk,
-          i.kuantiti,
-          i.produk.harga,
-          harga_kirim,
-          harga_total,
-        ]);
-      });
+      order.map(async (value, i)=>{
+        let no = i+1
+        let Tanggal = value.created_at.toDateString()
+        await data.push({
+          No: no,
+          Tanggal: Tanggal,
+          NoOrder: value.nomerOrder,
+          Nama: value.cart.user.nama_lengkap,
+          totalOrder: value.total_order,
+          status:  value.status
+        })
+      })
+     console.log(data, 'ini data');
+     
       const excel = await generateExcel(data, 'Hit-Log-Api');
       return excel;
     } catch (e) {
-      return `{e}`;
+      return e;
     }
   }
 }

@@ -53,38 +53,29 @@ const laporanTransaksi = [
   {
     title: 'Tanggal',
     dataIndex: 'Tanggal',
-    width: 40,
+    width: 15,
+  },
+  {
+    title: 'No Order',
+    dataIndex: 'NoOrder',
+    width: 15,
   },
   {
     title: 'Nama',
     dataIndex: 'Nama',
-    width: 40,
+    width:25,
   },
   {
-    title: 'Produk',
-    dataIndex: 'Produk',
-    width: 20,
+    title: 'Total Order',
+    dataIndex: 'TotalOrder',
+    width: 15,
   },
   {
-    title: 'Kuantiti',
-    dataIndex: 'Kuantiti',
-    width: 10,
+    title: 'Status',
+    dataIndex: 'Status',
+    width: 15,
   },
-  {
-    title: 'Harga_barang',
-    dataIndex: 'Harga_barang',
-    width: 20,
-  },
-  {
-    title: 'Harga_kirim',
-    dataIndex: 'Harga_kirim',
-    width: 20,
-  },
-  {
-    title: 'Harga_total',
-    dataIndex: 'Harga_total',
-    width: 20,
-  },
+ 
 ];
 
 async function setDataHitLogApi(dataHitLogApi) {
@@ -93,19 +84,14 @@ async function setDataHitLogApi(dataHitLogApi) {
 
     await dataHitLogApi.forEach((element, i) => {
       console.log(element[0], 'ini element');
-      let sum = 1;
-      sum += i;
       const filterElement = [];
-      filterElement['No'] = sum;
-      filterElement['Tanggal'] = element[0].toString();
-      filterElement['Nama'] = element[1];
-      filterElement['Produk'] = element[2];
-      filterElement['Kuantiti'] = element[3];
-      filterElement['Harga_barang'] = element[4];
-      filterElement['Harga_kirim'] = element[5];
-      filterElement['Harga_total'] = element[6];
+      filterElement['No'] = element.No;
+      filterElement['Tanggal']= element.Tanggal
+      filterElement['NoOrder']= element.NoOrder
+      filterElement['Nama'] = element.Nama
+      filterElement['TotalOrder'] = element.totalOrder
+      filterElement['Status'] = element.status
       console.log(filterElement, 'ini filter');
-      console.log(sum);
       dataFiltered.push(filterElement);
     });
 

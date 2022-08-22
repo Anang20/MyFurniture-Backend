@@ -89,7 +89,7 @@ export class OrderController {
   }
 
   @Get('export/excel-generator')
-  async downloadExcel(@Res() res) {
+  async downloadExcel(@Res() res:any) {
     try {
         return await res.download(
       `./uploads/export/${await this.exportExcel()}`,
