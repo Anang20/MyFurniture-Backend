@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { cartDetail } from 'src/cart/entities/cart-detail.entity';
 import { Cart } from 'src/cart/entities/cart.entity';
 import { Order } from 'src/order/entities/order.entity';
+import { Produk } from 'src/produk/entities/produk.entity';
 import { Repository } from 'typeorm';
 import { CreatePaymentDto } from './dto/createPayment.dto';
 import { Payment } from './entities/payment.entity';
@@ -17,7 +18,9 @@ export class PaymentService {
     @InjectRepository(Cart)
     private cartRepository: Repository<Cart>,
     @InjectRepository(cartDetail)
-    private cartDetailRepository: Repository<cartDetail>
+    private cartDetailRepository: Repository<cartDetail>,
+    @InjectRepository(Produk)
+    private produkRepository: Repository<Produk>
   ) {}
   
     async createPayment(createPaymentDto: CreatePaymentDto) {
@@ -92,15 +95,19 @@ export class PaymentService {
       })
       const idCart = payment.order.cart.id_cart
       const cartDetail = await this.cartDetailRepository.find({
-        relations:{cart:true},
+        relations:['produk'],
         where:{
           cart:{
             id_cart:idCart
           }
         }
       }) 
-      cartDetail.map(async value => 
-      await this.cartDetailRepository.softDelete(value.id_cart_detail))
+      cartDetail.map(async value => {
+        let produk = await this.produkRepository.findOneOrFail({where: {id_produk :value.produk.id_produk}})
+        produk.stok -= value.kuantiti
+        await this.produkRepository.save(produk)
+        await this.cartDetailRepository.softDelete(value.id_cart_detail)
+      })
       const order = payment.order
       order.status = 'sudah bayar'
       payment.status = 'diterima'
