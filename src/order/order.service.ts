@@ -81,10 +81,8 @@ export class OrderService {
         id_cart: id_cart,
       },
     });
-    console.log(Cart, 'ini cart');
-
+   
     const produk = Cart[0].detail;
-    console.log(produk, 'ini produk');
 
     return produk;
   }
@@ -95,23 +93,19 @@ export class OrderService {
         id_alamat_user: createOrder.id_alamat,
       },
     });
-    console.log(alamat,'ini aalamt');
     
     const ongkir = await this.ongkirRepository.findOne({
       where: {
         id_harga_kirim: 1,
       },
     });
-    console.log(ongkir, 'ini');
     
     const cart = await this.cartRepository.findOneOrFail({
       where: {
         id_cart: createOrder.id_cart,
       },
     });
-    console.log(cart);
-
-    const order = new Order();
+const order = new Order();
     order.alamat = alamat;
     order.cart = cart;
     order.total_hrg_brg = createOrder.total_hrg_brg;
@@ -216,9 +210,7 @@ export class OrderService {
         },
       },
     });
-    console.log(user);
-
-    return {
+return {
       detail: user[0].cart.detail,
       id_cart: user[0].cart.id_cart,
     };
@@ -239,7 +231,6 @@ export class OrderService {
       .trimLeft()
       return formatter
 }
-    console.log(order)
     const data =[]
     order.map(value=>{
       const data2 = []
@@ -260,7 +251,6 @@ export class OrderService {
             id: value.id_order
         })
       })
-        console.log(data,'ini data');
       }
     })
     return data
@@ -288,8 +278,7 @@ export class OrderService {
           status: 'telah dikirim',
         },
       });
-      console.log(order);
-      
+    
       const data = [];
       order.map(async (value, i)=>{
         let no = i+1
@@ -303,8 +292,6 @@ export class OrderService {
           status:  value.status
         })
       })
-     console.log(data, 'ini data');
-     
       const excel = await generateExcel(data, 'Hit-Log-Api');
       return excel;
     } catch (e) {
@@ -320,8 +307,7 @@ export class OrderService {
           status: 'telah dikirim',
         },
       });
-      console.log(order);
-      
+    
       const data = [];
       order.map(async (value, i)=>{
         let no = i+1

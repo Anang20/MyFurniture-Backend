@@ -21,12 +21,9 @@ export class CartService {
     ){}
 
     async createCart(user: User){
-      console.log(user);
       const hasil = new Cart()
       hasil.user = user
       const result = await this.cartRepository.insert(hasil)
-      console.log(result);
-      
     }
 
     async createCartDetail(id_produk:string, id_cart: string ,createCartDetailDto: CreateCartDetailDto) {
