@@ -8,7 +8,7 @@ export class Payment {
     @PrimaryGeneratedColumn('uuid')
     id_payment: string;
 
-    @OneToOne(()=> Order, (order) => order.payment)
+    @OneToOne(()=> Order, (order) => order.payment, {onDelete:'CASCADE'})
     @JoinColumn()
     order: Order
 
