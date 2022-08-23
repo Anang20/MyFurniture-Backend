@@ -101,20 +101,24 @@ export class OrderService {
     });
     
     const cart = await this.cartRepository.findOneOrFail({
+      relations:{detail:true},
       where: {
         id_cart: createOrder.id_cart,
       },
     });
+    
 const order = new Order();
+    cart.detail.map(value => order.detail.push(value))
     order.alamat = alamat;
-    order.cart = cart;
     order.total_hrg_brg = createOrder.total_hrg_brg;
     order.total_hrg_krm = createOrder.total_hrg_krm;
     order.total_order = createOrder.total_order;
     order.ongkir = ongkir;
     order.status = 'belum bayar';
-    order.nomerOrder = ' '
+    order.nomerOrder = ''
     await this.orderRepository.insert(order);
+    cart.detail = []
+    await this.cartRepository.save(cart)
     return await this.orderRepository.findOneOrFail({
       where: {
         id_order: order.id_order,
@@ -218,7 +222,7 @@ return {
 
   async findAll() {
     const order = await this.orderRepository.find({
-      relations: ['cart.detail.produk','alamat.kelurahan.kecamatan.kota.provinsi', 'cart.user'],
+      relations: ['detail.produk','alamat.kelurahan.kecamatan.kota.provinsi', 'alamat.user'],
       withDeleted:true
   })
   const curency = (value)=>{
@@ -234,7 +238,7 @@ return {
     const data =[]
     order.map(value=>{
       const data2 = []
-      data2[0] = value.cart.detail
+      data2[0] = value.detail
       if(data2[0].length >=1){
        data2[0].map((value2, i)=> {          
           let no = i +1
@@ -242,7 +246,7 @@ return {
             No: no,
             NomerOrder:value.nomerOrder,
             Tanggal: value.created_at.toDateString(),
-            Nama: value.cart.user.nama_lengkap,
+            Nama: value.alamat.user.nama_lengkap,
             Produk: value2.produk.nama_produk,
             Kuantiti: value2.kuantiti,
             HargaBarang:`Rp. ${curency(value2.produk.harga)} `,
@@ -273,7 +277,7 @@ return {
   async exportExcel() {
     try {
       const order = await this.orderRepository.find({
-        relations: ['cart.detail.produk', 'cart.user'],
+        relations: ['detail.produk', 'alamat.user'],
         where: {
           status: 'telah dikirim',
         },
@@ -287,7 +291,7 @@ return {
           No: no,
           Tanggal: Tanggal,
           NoOrder: value.nomerOrder,
-          Nama: value.cart.user.nama_lengkap,
+          Nama: value.alamat.user.nama_lengkap,
           totalOrder: value.total_order,
           status:  value.status
         })
@@ -302,7 +306,7 @@ return {
   async cariLaporan() {
     try {
       const order = await this.orderRepository.find({
-        relations: ['cart.detail.produk', 'cart.user'],
+        relations: ['detail.produk', 'alamat.user'],
         where: {
           status: 'telah dikirim',
         },
@@ -316,7 +320,7 @@ return {
           No: no,
           Tanggal: Tanggal,
           NoOrder: value.nomerOrder,
-          Nama: value.cart.user.nama_lengkap,
+          Nama: value.alamat.user.nama_lengkap,
           totalOrder: value.total_order,
           status:  value.status
         })

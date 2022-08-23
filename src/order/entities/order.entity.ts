@@ -11,10 +11,6 @@ import { number } from "joi";
 export class Order {
     @PrimaryGeneratedColumn('increment')
     id_order: number;
-
-    @ManyToOne(()=> Cart, (cart) => cart.order)
-    @JoinColumn()
-    cart: Cart
     
     @ManyToOne(()=> managementOngkir)
     @JoinColumn()
@@ -47,7 +43,8 @@ export class Order {
     @DeleteDateColumn()
     deleted_at: Date
 
-    @OneToOne(() => cartDetail, (detail)=> detail.produk)
+    @OneToMany(() => cartDetail, (detail)=> detail.produk)
+    @JoinColumn()
     detail: cartDetail[]
 
     @ManyToOne(()=> Alamat, alamat => alamat.order)

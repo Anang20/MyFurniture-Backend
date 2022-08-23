@@ -65,7 +65,7 @@ export class PaymentService {
         data.push({
           No: no,
           NoOrder:value.order.nomerOrder,
-          NamaCustomer: value.order.cart.user.nama_lengkap,
+          NamaCustomer: value.order.alamat.user.nama_lengkap,
           NamaBank: value.nama_bank,
           NoRek: value.no_rek,
           Bukti: value.gambar_bukti,
@@ -92,21 +92,6 @@ export class PaymentService {
         where: {
           id_payment: id_payment
         },relations: ['order.cart.detail.produk']
-      })
-      const idCart = payment.order.cart.id_cart
-      const cartDetail = await this.cartDetailRepository.find({
-        relations:['produk'],
-        where:{
-          cart:{
-            id_cart:idCart
-          }
-        }
-      }) 
-      cartDetail.map(async value => {
-        let produk = await this.produkRepository.findOneOrFail({where: {id_produk :value.produk.id_produk}})
-        produk.stok -= value.kuantiti
-        await this.produkRepository.save(produk)
-        await this.cartDetailRepository.softDelete(value.id_cart_detail)
       })
       const order = payment.order
       order.status = 'sudah bayar'
