@@ -95,7 +95,7 @@ export class ProdukController {
   @Get()
   async index(
     @Query('page') page = 1,
-    @Query('limit') limit = 14,
+    @Query('limit') limit = 6,
     @Query('nama_produk') nama_produk: string,
   ): Promise<Pagination<Produk>> {
     limit = limit > 100 ? 100 : limit; 

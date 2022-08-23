@@ -82,7 +82,7 @@ export class UsersController {
     };
   }
 
-  @Put('updare/password/:id_user')
+  @Put('update/password/:id_user')
   async updatePassword(
     @Param('id_user') id_user:string,
     @Body() updatePasswordDto:UpdatePasswordDto
