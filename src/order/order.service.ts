@@ -248,6 +248,7 @@ return {
             HargaBarang:`Rp. ${curency(value2.produk.harga)} `,
             Alamat: `${value.alamat.alamat}, ${value.alamat.kelurahan.nama_kelurahan}, ${value.alamat.kelurahan.kecamatan.nama_kecamatan}, ${value.alamat.kelurahan.kecamatan.kota.nama_kota}, ${value.alamat.kelurahan.kecamatan.kota.provinsi.nama_provinsi}`,
             status:value.status,
+            NoTelp: value.cart.user.no_telp,
             id: value.id_order
         })
       })
