@@ -52,5 +52,5 @@ export class Order {
 
     @ManyToOne(()=> Alamat, alamat => alamat.order)
     @JoinColumn()
-    alamat: Alamat
+    alamat: Alamat 
 }
