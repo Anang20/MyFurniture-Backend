@@ -13,6 +13,8 @@ import { hashPassword } from 'src/helper/hash_password';
 import { Provinsi } from './entities/provinsi.entity';
 import { Kota } from './entities/kota.entity';
 import { Kecamatan } from './entities/kecamatan.entity';
+import { UpdatePasswordDto } from './dto/update_pass.dto';
+import { use } from 'passport';
 
 @Injectable()
 export class UsersService {
@@ -42,6 +44,20 @@ export class UsersService {
         id_provinsi: id_provinsi
       }, relations : ['kota']
     })
+  }
+
+  async updatePassword(id_user: string, updatePasswordDto: UpdatePasswordDto){
+    const hasil = await this.usersRepository.findOneOrFail({where:{id_user}})
+    const salt = generateString()
+    const password = await hashPassword(updatePasswordDto.password, salt)
+    hasil.salt = salt
+    hasil.password = password
+    await this.usersRepository.save(hasil)
+    return this.usersRepository.findOneOrFail({
+      where: {
+        id_user,
+      },
+    });
   }
 
   async findKecamatan(id_kota: number){
@@ -164,8 +180,8 @@ export class UsersService {
         throw e;
       }
     } 
-    const salt = generateString()
-    const password = await hashPassword(updateUserDto.password, salt)
+    // const salt = generateString()
+    // const password = await hashPassword(updateUserDto.password, salt)
     const hasil = await this.usersRepository.findOneOrFail({
       where: {
         id_user: id_user
@@ -175,8 +191,6 @@ export class UsersService {
     hasil.foto = updateUserDto.foto
     hasil.email = updateUserDto.email
     hasil.no_telp = updateUserDto.no_telp
-    hasil.salt = salt
-    hasil.password = password
     await this.usersRepository.save(hasil);
     return this.usersRepository.findOneOrFail({
       where: {

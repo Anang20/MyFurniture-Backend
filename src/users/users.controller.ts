@@ -19,6 +19,7 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateAlamatDto } from './dto/create-alamat.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { UpdatePasswordDto } from './dto/update_pass.dto';
 
 @Controller('users')
 export class UsersController {
@@ -79,6 +80,14 @@ export class UsersController {
     return {
       data: await this.usersService.findKelurahan(id_kecamatan),
     };
+  }
+
+  @Put('updare/password/:id_user')
+  async updatePassword(
+    @Param('id_user') id_user:string,
+    @Body() updatePasswordDto:UpdatePasswordDto
+  ){
+    return await this.usersService.updatePassword(id_user, updatePasswordDto)
   }
 
   @UseGuards(AuthGuard('jwt'))
