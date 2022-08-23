@@ -10,18 +10,18 @@ import { ProdukService } from './produk.service';
 import { AuthGuard } from '@nestjs/passport';
 
 
-const path = require('path');
+// const path = require('path');
 
-export const storage = {
-  storage: diskStorage({
-    destination: './public/img/produk',
-    filename: (req, file, callback) => {
-      const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
-      const extension: string = path.parse(file.originalname).ext;
-      callback(null, `${filename}${extension}`)
-    },
-  })
-}
+// export const storage = {
+//   storage: diskStorage({
+//     destination: './public/img/produk',
+//     filename: (req, file, callback) => {
+//       const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
+//       const extension: string = path.parse(file.originalname).ext;
+//       callback(null, `${filename}${extension}`)
+//     },
+//   })
+// }
 
 @Controller('produk')
 export class ProdukController {
@@ -67,20 +67,13 @@ export class ProdukController {
   // mengedit produk
   @UseGuards(AuthGuard('jwt'))
   @Put(':id_produk')
-  @UseInterceptors(FileInterceptor('gambar', storage))
+  // @UseInterceptors(FileInterceptor('gambar', storage))
   async update(
     @Param('id_produk', ParseUUIDPipe) id_produk: string,
     @Body() updateProdukDto: UpdateProdukDto,
-    @UploadedFile() gambar: Express.Multer.File,
-    @Request() req,
   ) {
     return {
-      data: await this.produkService.update(
-        req,
-        id_produk,
-        updateProdukDto,
-        gambar.filename,
-      ),
+      data: await this.produkService.update(id_produk, updateProdukDto),
       statusCode: HttpStatus.OK,
       message: 'success',
     };
