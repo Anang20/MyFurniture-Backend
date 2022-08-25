@@ -1,6 +1,6 @@
 import { IsNotEmpty } from "class-validator";
 
-export class UpdateCartDetailDto{
+export class UpdateCartDto{
     @IsNotEmpty()
     kuantiti: number
 }

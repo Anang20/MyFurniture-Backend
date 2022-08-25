@@ -41,6 +41,6 @@ export class Alamat {
     deleted_at: Date;
 
     @OneToMany(()=> Order, order => order.alamat)
-    order: Order
+    order: Order[]
 
 }

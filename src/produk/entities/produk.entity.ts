@@ -1,4 +1,4 @@
-import { cartDetail } from "src/cart/entities/cart-detail.entity";
+import { Cart} from "src/cart/entities/cart-detail.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
@@ -30,6 +30,6 @@ export class Produk {
     @DeleteDateColumn()
     deleted_at: Date
 
-    @OneToMany(() => cartDetail, (detail)=> detail.produk)
-    detail: cartDetail
+    @OneToMany(() => Cart, (detail)=> detail.produk)
+    detail: Cart
 }

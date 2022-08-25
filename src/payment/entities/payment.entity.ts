@@ -1,5 +1,4 @@
 import { IsNotEmpty } from "class-validator";
-import { cartDetail } from "src/cart/entities/cart-detail.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Order } from "../../order/entities/order.entity";
 
@@ -32,7 +31,4 @@ export class Payment {
 
     @DeleteDateColumn()
     deleted_at: Date
-
-    @OneToOne(() => cartDetail, (detail)=> detail.produk)
-    detail: cartDetail
 }

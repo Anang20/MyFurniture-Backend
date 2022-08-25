@@ -37,33 +37,26 @@ export class OrderController {
     };
   }
 
-  @Get('/total_hrg_produk/:id_cart')
-  async totalHargaProduk(@Param('id_cart', ParseUUIDPipe) id_cart: string) {
+  @Get('/total_hrg_produk/:id_user')
+  async totalHargaProduk(@Param('id_user', ParseUUIDPipe) id_user: string) {
     return {
-      data: await this.orderService.totalHargaProduk(id_cart),
+      data: await this.orderService.totalHargaProduk(id_user),
       statusCode: HttpStatus.OK,
     };
   }
 
-    @Post('/buat/order')
-    async createOrder(@Body() createOrder : CreateOrderDto){
-        return {
-            data : await this.orderService.createOrder(createOrder),
-            statusCode : HttpStatus.CREATED,
-            massage : "success"
-        }
-    }
-    @Get(':id_user')
-    async findOneOrder(@Param('id_user', ParseUUIDPipe) id_user : string){
-        return await this.orderService.findOneOrder(id_user)
-    }
-
-    @Get('cart/:id_user')
-    async findOneCart(@Param('id_user', ParseUUIDPipe) id_user:string){
-        return{
-            data: await this.orderService.findOneCart(id_user)
-        }
-    }
+  @Post('/buat/order')
+  async createOrder(@Body() createOrder: CreateOrderDto) {
+    return {
+      data: await this.orderService.createOrder(createOrder),
+      statusCode: HttpStatus.CREATED,
+      massage: 'success',
+    };
+  }
+  @Get(':id_user')
+  async findOrderByIdUser(@Param('id_user', ParseUUIDPipe) id_user: string) {
+    return await this.orderService.findOrderByUser(id_user);
+  }
 
   @Get()
   async findAll() {
@@ -79,35 +72,28 @@ export class OrderController {
     };
   }
   @Get('cari/cari_laporan')
-  async cariLaporan(){
-    return await this.orderService.cariLaporan()
+  async cariLaporan() {
+    return await this.orderService.cariLaporan();
   }
 
   @Get('excel/generator')
   async exportExcel() {
     try {
-       return await this.orderService.exportExcel(); 
+      return await this.orderService.exportExcel();
     } catch (error) {
-        return 'terdapat kesalahan saat membuat excel'
-    }  
+      return 'terdapat kesalahan saat membuat excel';
+    }
   }
 
   @Get('export/excel-generator')
-  async downloadExcel(@Res() res:any) {
+  async downloadExcel(@Res() res: any) {
     try {
-        return await res.download(
-      `./uploads/export/${await this.exportExcel()}`,
-      'laporan.xlsx',
-    );
+      return await res.download(
+        `./uploads/export/${await this.exportExcel()}`,
+        'laporan.xlsx',
+      );
     } catch (error) {
-        return 'ada kesalahan dalam mendowload excel'
-    }  
-  }
-
-  @Get('produk/:id_cart')
-  async findCart(@Param('id_cart', ParseUUIDPipe) id_cart: string) {
-    return {
-      data: await this.orderService.findCart(id_cart),
-    };
+      return 'ada kesalahan dalam mendowload excel';
+    }
   }
 }

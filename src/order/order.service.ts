@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { cartDetail } from 'src/cart/entities/cart-detail.entity';
-import { Cart } from 'src/cart/entities/cart.entity';
 import { Alamat } from 'src/users/entities/alamat.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -13,6 +11,7 @@ import { Produk } from 'src/produk/entities/produk.entity';
 import { Role } from 'src/users/entities/role.entity';
 import { generateExcel } from 'src/helper/export_excel';
 import { async } from 'rxjs';
+import { Cart } from 'src/cart/entities/cart-detail.entity';
 // import { generateExcel } from 'src/helper/export_excel';
 
 @Injectable()
@@ -51,40 +50,17 @@ export class OrderService {
 
   // Untuk Users
 
-  async totalHargaProduk(id_cart: string) {
-    const Cart = await this.cartRepository.find({
-      relations: {
-        detail: true,
-      },
-      where: {
-        id_cart: id_cart,
-      },
+  async totalHargaProduk(id_user: string) {
+    const user = await this.userRepository.find({
+      relations: { cart: true },
+      where: { id_user, cart: { status: 'belum diorder' } },
     });
-    const detail = [];
-    detail[0] = Cart[0].detail;
     const harga: number[] = [];
-    detail[0].map(async (i) => {
-      await harga.push(i.harga_total);
-    });
+    user[0].cart.map((value) => harga.push(value.harga_total));
     const totalHarga = harga.reduce((a, b) => {
       return a + b;
     });
     return totalHarga;
-  }
-
-  async findCart(id_cart: string) {
-    const Cart = await this.cartRepository.find({
-      relations: {
-        detail: true,
-      },
-      where: {
-        id_cart: id_cart,
-      },
-    });
-   
-    const produk = Cart[0].detail;
-
-    return produk;
   }
 
   async createOrder(createOrder: CreateOrderDto) {
@@ -93,29 +69,37 @@ export class OrderService {
         id_alamat_user: createOrder.id_alamat,
       },
     });
-    
+
     const ongkir = await this.ongkirRepository.findOne({
       where: {
         id_harga_kirim: 1,
       },
     });
-    
-    const cart = await this.cartRepository.findOneOrFail({
-      where: {
-        id_cart: createOrder.id_cart,
-      },
-    });
-const order = new Order();
+    const order = new Order();
+    const id = [createOrder.id_cart];
+    order.cart =[]
     order.alamat = alamat;
-    order.cart = cart;
     order.total_hrg_brg = createOrder.total_hrg_brg;
     order.total_hrg_krm = createOrder.total_hrg_krm;
     order.total_order = createOrder.total_order;
     order.ongkir = ongkir;
     order.status = 'belum bayar';
-    order.nomerOrder = ' '
+    order.nomerOrder = '';
     await this.orderRepository.insert(order);
+    await id[0].map(async (value) => {
+      const cartId = await this.cartRepository.findOneOrFail({
+        where: { id_cart: value },
+      });
+      const deta = await this.orderRepository.findOneOrFail({where:{id_order:order.id_order}})
+      console.log(deta, 'ini deta');
+      cartId.status = 'telah diorder';
+      cartId.order = deta
+      await this.cartRepository.save(cartId)
+      console.log(cartId);
+      
+    });
     return await this.orderRepository.findOneOrFail({
+      relations:{cart:true},
       where: {
         id_order: order.id_order,
       },
@@ -181,80 +165,66 @@ const order = new Order();
     return hasil;
   }
 
-  async findOneOrder(id_user: string) {
+  async findOrderByUser(id_user: string) {
     const user = await this.userRepository.findOneOrFail({
-      where: {
-        id_user: id_user,
-      },
-      relations: {
-        cart: {
-          order: true,
-        },
-      },
-    });
-    const order = user.cart.order;
+      relations:['alamat.order.cart'],
+      where: {id_user}
+    })
+    // console.log(order);
+    const order = []
+    user.alamat.map(value => {
+      if(value.order.length > 0){
+        value.order.map(val => order.push(val))
+      }
+    })
+    
     return order;
-  }
-
-  async findOneCart(id_user: string) {
-    const user = await this.userRepository.find({
-      where: {
-        id_user,
-        cart: {
-          detail: true
-        },
-      },
-      relations: {
-        cart: {
-          detail: true,
-        },
-      },
-    });
-return {
-      detail: user[0].cart.detail,
-      id_cart: user[0].cart.id_cart,
-    };
   }
 
   async findAll() {
     const order = await this.orderRepository.find({
-      relations: ['cart.detail.produk','alamat.kelurahan.kecamatan.kota.provinsi', 'cart.user'],
-      withDeleted:true
-  })
-  const curency = (value)=>{
-    const formatter = new Intl.NumberFormat('en-ID', {
+      relations: [
+        'cart.produk',
+        'alamat.kelurahan.kecamatan.kota.provinsi',
+        'cart.user',
+      ],
+      withDeleted: true,
+    });
+    const curency = (value) => {
+      const formatter = new Intl.NumberFormat('en-ID', {
         style: 'currency',
-        currency: 'IDR'
-      }).format(value)
-      .replace(/[IDR]/gi, '')
-      .replace(/(\.+\d{2})/, '')
-      .trimLeft()
-      return formatter
-}
-    const data =[]
-    order.map(value=>{
-      const data2 = []
-      data2[0] = value.cart.detail
-      if(data2[0].length >=1){
-       data2[0].map((value2, i)=> {          
-          let no = i +1
-       return data.push({
+        currency: 'IDR',
+      })
+        .format(value)
+        .replace(/[IDR]/gi, '')
+        .replace(/(\.+\d{2})/, '')
+        .trimLeft();
+      return formatter;
+    };
+    const data = [];
+    order.map((value) => {
+      const data2 = [];
+      data2[0] = value.cart;
+      if (data2[0].length >= 1) {
+        data2[0].map((value2, i) => {
+          let no = i + 1;
+          return data.push({
             No: no,
-            NomerOrder:value.nomerOrder,
+            NomerOrder: value.nomerOrder,
             Tanggal: value.created_at.toDateString(),
-            Nama: value.cart.user.nama_lengkap,
+            Nama: value.cart[i].user.nama_lengkap,
             Produk: value2.produk.nama_produk,
             Kuantiti: value2.kuantiti,
-            HargaBarang:`Rp. ${curency(value2.produk.harga)} `,
+            HargaBarang: `Rp. ${curency(value2.produk.harga)} `,
             Alamat: `${value.alamat.alamat}, ${value.alamat.kelurahan.nama_kelurahan}, ${value.alamat.kelurahan.kecamatan.nama_kecamatan}, ${value.alamat.kelurahan.kecamatan.kota.nama_kota}, ${value.alamat.kelurahan.kecamatan.kota.provinsi.nama_provinsi}`,
-            status:value.status,
+            status: value.status,
             id: value.id_order,
-            noTelp: value.cart.user.no_telp,
-        })
-      })
+            noTelp: value.cart[i].user.no_telp,
+          });
+        });
       }
-    })
-    return data
+    });
+    return data;
   }
 
   async terima(id_order: number) {
@@ -279,20 +249,20 @@ return {
           status: 'telah dikirim',
         },
       });
-    
+
       const data = [];
-      order.map(async (value, i)=>{
-        let no = i+1
-        let Tanggal = value.created_at.toDateString()
+      order.map(async (value, i) => {
+        let no = i + 1;
+        let Tanggal = value.created_at.toDateString();
         await data.push({
           No: no,
           Tanggal: Tanggal,
           NoOrder: value.nomerOrder,
-          Nama: value.cart.user.nama_lengkap,
+          Nama: value.cart[i].user.nama_lengkap,
           totalOrder: value.total_order,
-          status:  value.status
-        })
-      })
+          status: value.status,
+        });
+      });
       const excel = await generateExcel(data, 'Hit-Log-Api');
       return excel;
     } catch (e) {
@@ -308,24 +278,22 @@ return {
           status: 'telah dikirim',
         },
       });
-    
+
       const data = [];
-      order.map(async (value, i)=>{
-        let no = i+1
-        let Tanggal = value.created_at.toDateString()
+      order.map(async (value, i) => {
+        let no = i + 1;
+        let Tanggal = value.created_at.toDateString();
         await data.push({
           No: no,
           Tanggal: Tanggal,
           NoOrder: value.nomerOrder,
-          Nama: value.cart.user.nama_lengkap,
+          Nama: value.cart[i].user.nama_lengkap,
           totalOrder: value.total_order,
-          status:  value.status
-        })
-      })
-      console.log(data,'ini data');
-      
-      
-    
+          status: value.status,
+        });
+      });
+      console.log(data, 'ini data');
+
       return data;
     } catch (e) {
       return e;

@@ -1,21 +1,20 @@
-import { cartDetail } from "src/cart/entities/cart-detail.entity";
-import { Cart } from "src/cart/entities/cart.entity";
+
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { managementOngkir } from "./management-ongkir.entity";
 import { Payment } from "../../payment/entities/payment.entity";
 import { Alamat } from "src/users/entities/alamat.entity";
 import { isNumberString, IsOptional } from "class-validator";
 import { number } from "joi";
+import { Cart } from "src/cart/entities/cart-detail.entity";
 
 @Entity()
 export class Order {
     @PrimaryGeneratedColumn('increment')
     id_order: number;
 
-    @ManyToOne(()=> Cart, (cart) => cart.order)
-    @JoinColumn()
-    cart: Cart
-    
+    @OneToMany(()=> Cart, cart => cart.order)
+    cart:Cart[]
+
     @ManyToOne(()=> managementOngkir)
     @JoinColumn()
     ongkir: managementOngkir
@@ -46,9 +45,6 @@ export class Order {
 
     @DeleteDateColumn()
     deleted_at: Date
-
-    @OneToOne(() => cartDetail, (detail)=> detail.produk)
-    detail: cartDetail[]
 
     @ManyToOne(()=> Alamat, alamat => alamat.order)
     @JoinColumn()

@@ -1,4 +1,4 @@
-import { Cart } from 'src/cart/entities/cart.entity';
+import { Cart } from 'src/cart/entities/cart-detail.entity';
 import { Request } from 'src/request/entity/request.entity';
 import {
   Entity,
@@ -9,8 +9,6 @@ import {
   CreateDateColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
-  JoinColumn,
 } from 'typeorm';
 import { Alamat } from './alamat.entity';
 import { Role } from './role.entity';
@@ -22,27 +20,27 @@ export class User {
 
   @ManyToOne(
     () => {
-      return Role;               
+      return Role;
     },
     (callBack) => {
-      return callBack.user
-    }
+      return callBack.user;
+    },
   )
   role: number;
-  
+
   @Column()
   nama_lengkap: string;
 
-  @Column({unique: true})
+  @Column({ unique: true })
   email: string;
 
   @Column()
   password: string;
-  
-  @Column({unique: true,type:'varchar'})
+
+  @Column({ unique: true, type: 'varchar' })
   no_telp: number;
 
-  @Column({ nullable: true})
+  @Column({ nullable: true })
   foto: string;
 
   @Column()
@@ -58,11 +56,11 @@ export class User {
   deleted_at: Date;
 
   @OneToMany(() => Alamat, (alamat) => alamat.user)
-  alamat: Alamat[]
+  alamat: Alamat[];
 
-  @OneToOne(() => Cart, (cart)=> cart.user)
-  cart : Cart
+  @OneToMany(() => Request, (request) => request.user)
+  request: Request;
 
-  @OneToMany(() => Request, request => request.user)
-  request: Request
+  @OneToMany(() => Cart, (cart) => cart.user)
+  cart: Cart[];
 }

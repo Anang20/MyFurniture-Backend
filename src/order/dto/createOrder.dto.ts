@@ -1,9 +1,10 @@
-import { IsNotEmpty } from "class-validator";
+import { IsArray, isArray, IsNotEmpty } from "class-validator";
 import { Column } from "typeorm";
 
 export class CreateOrderDto{
     @IsNotEmpty()
-    id_cart: string
+    @IsArray()
+    id_cart:[]
 
     @IsNotEmpty()
     id_alamat: string
