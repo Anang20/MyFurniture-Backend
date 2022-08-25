@@ -78,7 +78,7 @@ export class OrderController {
       data: await this.orderService.terima(id_order),
     };
   }
-  @Get('/cari_laporan')
+  @Get('cari/cari_laporan')
   async cariLaporan(){
     return await this.orderService.cariLaporan()
   }

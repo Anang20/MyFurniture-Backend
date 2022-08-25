@@ -43,7 +43,7 @@ export class ProdukController {
   @Get('/search/produk')
   async findProduk(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(12), ParseIntPipe) limit: number = 12,
+    @Query('limit', new DefaultValuePipe(1000), ParseIntPipe) limit: number = 1000,
     @Query('search') search: string,
   ): Promise<Pagination<Produk>> {
     limit = limit > 100 ? 100 : limit;
