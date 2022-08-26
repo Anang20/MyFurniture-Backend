@@ -21,7 +21,7 @@ export class PaymentService {
     @InjectRepository(Produk)
     private produkRepository: Repository<Produk>,
     @InjectRepository(User)
-    private userRepository: Repository<User>
+    private userRepository: Repository<User>,
   ) {}
 
   async createPayment(createPaymentDto: CreatePaymentDto) {
@@ -45,9 +45,9 @@ export class PaymentService {
     };
     const id = `${year}${month}${day}${getId(createPaymentDto.id_order)}`;
     console.log(id, 'ini id');
-    
+
     order.nomerOrder = id;
-    order.status = 'sudah bayar'  
+    order.status = 'sudah bayar';
     await this.orderRepository.save(order);
     return await this.paymentRepository.findOneOrFail({
       where: {
@@ -84,16 +84,22 @@ export class PaymentService {
 
   async remove(id_payment: string) {
     const payment = await this.paymentRepository.findOneOrFail({
-      relations:{order:{cart:{user:true}}},
+      relations: { order: { cart: { user: true } } },
       where: {
         id_payment: id_payment,
       },
     });
-    const user = await this.userRepository.find({relations:{cart:true},where:{id_user:payment.order.cart[0].user.id_user ,cart:{status: 'belum diorder'}}})
-    user[0].cart.map(async value => {
-      await this.cartRepository.delete(value.id_cart)
-    })
-    await this.orderRepository.delete(payment.order.id_order)
+    const user = await this.userRepository.find({
+      relations: { cart: true },
+      where: {
+        id_user: payment.order.cart[0].user.id_user,
+        cart: { status: 'belum diorder' },
+      },
+    });
+    user[0].cart.map(async (value) => {
+      await this.cartRepository.delete(value.id_cart);
+    });
+    await this.orderRepository.delete(payment.order.id_order);
     await this.paymentRepository.delete(id_payment);
   }
 
@@ -104,13 +110,15 @@ export class PaymentService {
       },
       relations: ['order.cart.produk'],
     });
-    payment.order.cart.map(async value =>{
-      const produk = await this.produkRepository.findOneOrFail({where:{id_produk:value.produk.id_produk}})
-      produk.stok -= value.kuantiti
-      await this.produkRepository.save(produk)
-    })
+    payment.order.cart.map(async (value) => {
+      const produk = await this.produkRepository.findOneOrFail({
+        where: { id_produk: value.produk.id_produk },
+      });
+      produk.stok -= value.kuantiti;
+      await this.produkRepository.save(produk);
+    });
     const order = payment.order;
-    order.status = 'sudah bayar';
+    order.status = 'diterima';
     payment.status = 'diterima';
     await this.orderRepository.save(order);
     await this.paymentRepository.save(payment);
