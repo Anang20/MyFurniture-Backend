@@ -207,9 +207,7 @@ export class OrderService {
       data2[0] = value.cart;
       if (data2[0].length >= 1) {
         data2[0].map((value2, i) => {
-          let no = i + 1;
           return data.push({
-            No: no,
             NomerOrder: value.nomerOrder,
             Tanggal: value.created_at.toDateString(),
             Nama: value.cart[i].user.nama_lengkap,
@@ -224,6 +222,9 @@ export class OrderService {
         });
       }
     });
+    data.forEach((el,i)=> 
+      el.No = i + 1
+    )
     return data;
   }
 
