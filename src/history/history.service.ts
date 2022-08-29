@@ -24,19 +24,14 @@ export class HistoryService {
     const user = await this.userRepository.findOneOrFail({
       relations: [
         'alamat.kelurahan.kecamatan.kota.provinsi',
-        'alamat.order.cart.produk',
+        'alamat.order.cart.detail.produk',
       ],
       where: {
         id_user: id_user,
       },
     });
-    console.log(user);
-    
     const data = [];
     user.alamat.map(async (value) => {
-      console.log(value,'ini value');
-      console.log(value.kelurahan);
-      
       if (value.order.length > 0) {
         value.order.map((order) =>
           data.push({
@@ -44,11 +39,30 @@ export class HistoryService {
             totalOrder: order.total_order,
             produk: order.cart,
             status: order.status,
-            alamat: `${value.alamat}, ${value.kelurahan.nama_kelurahan}, ${value.kelurahan.kecamatan.nama_kecamatan}, ${value.kelurahan.kecamatan.kota.nama_kota}, ${value.kelurahan.kecamatan.kota.provinsi.nama_provinsi}`,
+            alamat: `${order.alamat.alamat}, ${order.alamat.kelurahan.nama_kelurahan}, ${order.alamat.kelurahan.kecamatan.nama_kecamatan}, ${order.alamat.kelurahan.kecamatan.kota.nama_kota}, ${order.alamat.kelurahan.kecamatan.kota.provinsi.nama_provinsi}`,
           }),
         );
       }
     });
+    return data;
+  }
+
+  async findById(id_order) {
+    const order = await this.orderRepository.findOneOrFail({
+      relations: ['cart.produk'],
+      where: { id_order },
+    });
+    const data = [];
+    order.cart.map(
+      async (value) =>
+        await data.push({
+          namaProduk: value.produk.nama_produk,
+          hargaProduk: value.produk.harga,
+          kuantiti: value.kuantiti,
+          hargaTotal: value.harga_total,
+        }),
+    );
+    console.log(data, 'ini data');
     return data;
   }
 }
