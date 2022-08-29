@@ -245,7 +245,7 @@ export class OrderService {
   async exportExcel() {
     try {
       const order = await this.orderRepository.find({
-        relations: ['cart.detail.produk', 'cart.user'],
+        relations: ['cart.produk', 'cart.user'],
         where: {
           status: 'telah dikirim',
         },
@@ -259,7 +259,7 @@ export class OrderService {
           No: no,
           Tanggal: Tanggal,
           NoOrder: value.nomerOrder,
-          Nama: value.cart[i].user.nama_lengkap,
+          Nama: value.cart[0].user.nama_lengkap,
           totalOrder: value.total_order,
           status: value.status,
         });
@@ -274,7 +274,7 @@ export class OrderService {
   async cariLaporan() {
     try {
       const order = await this.orderRepository.find({
-        relations: ['cart.detail.produk', 'cart.user'],
+        relations: ['cart.produk', 'cart.user'],
         where: {
           status: 'telah dikirim',
         },
@@ -288,7 +288,7 @@ export class OrderService {
           No: no,
           Tanggal: Tanggal,
           NoOrder: value.nomerOrder,
-          Nama: value.cart[i].user.nama_lengkap,
+          Nama: value.cart[0].user.nama_lengkap,
           totalOrder: value.total_order,
           status: value.status,
         });
