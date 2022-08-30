@@ -178,7 +178,7 @@ export class DashboardService {
     };
   }
   async getDataRegistrasi() {
-    const User = await this.userRepository.find();
+    const User = await this.userRepository.find({where:{role: 2}});
     const Januari = [];
     const Februari = [];
     const Maret = [];
