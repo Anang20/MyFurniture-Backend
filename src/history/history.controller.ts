@@ -18,15 +18,15 @@ export class HistoryController {
     };
   }
 
-  @Get(':id_user')
+  @Get('/order/:id_user')
   async findOne(@Param('id_user', ParseUUIDPipe) id_user: string) {
     return {
       data: await this.historyService.findOne(id_user),
     };
   }
 
-  @Get('id_order')
-  async findOneById(@Param('id_order', ParseUUIDPipe) id_order: number) {
+  @Get('produk/:id_order')
+  async findOneById(@Param('id_order') id_order: number) {
     return await this.historyService.findById(id_order);
   }
 }

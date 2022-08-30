@@ -46,7 +46,7 @@ export class Order {
     @DeleteDateColumn()
     deleted_at: Date
 
-    @ManyToOne(()=> Alamat, alamat => alamat.order)
+    @ManyToOne(()=> Alamat, alamat => alamat.order, {onDelete: 'CASCADE'})
     @JoinColumn()
     alamat: Alamat 
 }

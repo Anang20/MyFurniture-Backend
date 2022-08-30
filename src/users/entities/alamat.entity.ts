@@ -40,7 +40,7 @@ export class Alamat {
     @DeleteDateColumn()
     deleted_at: Date;
 
-    @OneToMany(()=> Order, order => order.alamat)
+    @OneToMany(()=> Order, order => order.alamat, {onDelete: 'CASCADE'})
     order: Order[]
 
 }

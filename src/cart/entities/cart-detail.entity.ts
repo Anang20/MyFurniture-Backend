@@ -27,7 +27,9 @@ export class Cart {
   @JoinColumn()
   produk: Produk;
 
-  @ManyToOne(() => Order, (order) => order.cart)
+  @ManyToOne(() => Order, (order) => order.cart, {
+    onDelete: 'CASCADE',
+  })
   order: Order;
 
   @Column()
@@ -48,7 +50,7 @@ export class Cart {
   @DeleteDateColumn()
   deleted_at: Date;
 
-  @ManyToOne(() => User, (user) => user.cart)
+  @ManyToOne(() => User, (user) => user.cart, {onDelete: 'CASCADE'})
   @JoinColumn()
   user: User;
 }

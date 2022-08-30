@@ -23,18 +23,20 @@ export class HistoryService {
   async findOne(id_user: string) {
     const user = await this.userRepository.findOneOrFail({
       relations: [
-        'alamat.kelurahan.kecamatan.kota.provinsi',
-        'alamat.order.cart.detail.produk',
+        'alamat.order.cart.produk',
+        'alamat.order.alamat.kelurahan.kecamatan.kota.provinsi'
       ],
       where: {
         id_user: id_user,
       },
+      withDeleted: true,
     });
     const data = [];
     user.alamat.map(async (value) => {
       if (value.order.length > 0) {
         value.order.map((order) =>
           data.push({
+            idOrder: order.id_order,
             nomerorder: order.nomerOrder,
             totalOrder: order.total_order,
             produk: order.cart,

@@ -270,6 +270,6 @@ export class UsersService {
       }
     }
 
-    await this.alamatRepository.delete(id_alamat);
+    await this.alamatRepository.softDelete(id_alamat);
   }
 }
