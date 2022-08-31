@@ -300,4 +300,8 @@ export class OrderService {
       return e;
     }
   }
+
+  async findByOrder(id_order:number){
+    return await this.orderRepository.findOneOrFail({where:{id_order},relations:{cart:{user:true}}})
+  }
 }

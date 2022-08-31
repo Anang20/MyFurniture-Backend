@@ -96,4 +96,9 @@ export class OrderController {
       return 'ada kesalahan dalam mendowload excel';
     }
   }
+
+  @Get('order/:id_order')
+  async findByPaymnet(@Param('id_order') id_order: number){
+    return await this.orderService.findByOrder(id_order)
+  }
 }
