@@ -83,7 +83,15 @@ export class PaymentService {
   }
 
   async remove(id_payment: string) {
-    await this.paymentRepository.delete(id_payment);
+    const payment = await this.paymentRepository.findOneOrFail({
+      relations: ['order.cart'],
+      where: {
+        id_payment: id_payment,
+      },
+    });
+    const cart = payment.order.cart;
+    cart.map(async (val) => await this.cartRepository.delete(val.id_cart));
+    await this.orderRepository.delete(payment.order.id_order);
   }
 
   async acc(id_payment: string) {
