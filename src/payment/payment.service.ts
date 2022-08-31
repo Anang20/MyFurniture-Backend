@@ -83,23 +83,6 @@ export class PaymentService {
   }
 
   async remove(id_payment: string) {
-    const payment = await this.paymentRepository.findOneOrFail({
-      relations: { order: { cart: { user: true } } },
-      where: {
-        id_payment: id_payment,
-      },
-    });
-    const user = await this.userRepository.find({
-      relations: { cart: true },
-      where: {
-        id_user: payment.order.cart[0].user.id_user,
-        cart: { status: 'belum diorder' },
-      },
-    });
-    user[0].cart.map(async (value) => {
-      await this.cartRepository.delete(value.id_cart);
-    });
-    await this.orderRepository.delete(payment.order.id_order);
     await this.paymentRepository.delete(id_payment);
   }
 
