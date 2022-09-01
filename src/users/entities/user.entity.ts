@@ -9,6 +9,7 @@ import {
   CreateDateColumn,
   ManyToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Alamat } from './alamat.entity';
 import { Role } from './role.entity';
@@ -26,6 +27,7 @@ export class User {
       return callBack.user;
     },
   )
+  @JoinColumn()
   role: number;
 
   @Column()

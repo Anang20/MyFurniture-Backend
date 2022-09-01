@@ -47,7 +47,7 @@ export class PaymentService {
     console.log(id, 'ini id');
 
     order.nomerOrder = id;
-    order.status = 'sudah bayar';
+    order.status = 'menunggu';
     await this.orderRepository.save(order);
     return await this.paymentRepository.findOneOrFail({
       where: {
@@ -92,6 +92,7 @@ export class PaymentService {
     const cart = payment.order.cart;
     cart.map(async (val) => await this.cartRepository.delete(val.id_cart));
     await this.orderRepository.delete(payment.order.id_order);
+    await this.paymentRepository.delete(id_payment)
   }
 
   async acc(id_payment: string) {

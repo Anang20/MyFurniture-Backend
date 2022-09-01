@@ -178,7 +178,12 @@ export class DashboardService {
     };
   }
   async getDataRegistrasi() {
-    const User = await this.userRepository.find({where:{role: 2}});
+    const User = await this.userRepository.find({
+      relations:['role'],
+      where:{role: 2}
+    });
+    console.log(User);
+    
     const Januari = [];
     const Februari = [];
     const Maret = [];
@@ -203,6 +208,8 @@ export class DashboardService {
     const OktoberOld = [];
     const NovemberOld = [];
     const DesemberOld = [];
+    console.log(Agustus);
+    
     User.map((value) => {
       const month = value.created_at.getMonth() + 1;
       const yearNow = new Date();
